@@ -2,6 +2,100 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Local font (served from /public/fonts) */
+@font-face {
+  font-family: 'Opsilon';
+  src: url('/fonts/Opsilon-JpwRn.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Opsilon';
+  src: url('/fonts/OpsilonItalic-V4dGV.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+/* Optional: map bold/black to regular file so requests for 700/900 still use Opsilon */
+@font-face {
+  font-family: 'Opsilon';
+  src: url('/fonts/Opsilon-JpwRn.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Opsilon';
+  src: url('/fonts/Opsilon-JpwRn.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Graphy';
+  src: url('/fonts/Graphy-Demo.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Graphy';
+  src: url('/fonts/Graphy-Demo.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Graphy';
+  src: url('/fonts/Graphy-Demo.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Glacial';
+  src: url('/fonts/GlacialIndifference-Regular.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Glacial';
+  src: url('/fonts/GlacialIndifference-Regular.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+/* Add regular weight mapping so 400 loads Glacial as well */
+@font-face {
+  font-family: 'Glacial';
+  src: url('/fonts/GlacialIndifference-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* Utility class */
+@layer utilities {
+  .font-opsilon {
+    font-family: 'Opsilon', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  }
+  .font-graphy {
+    font-family: 'Graphy', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  }
+  .font-glacial {
+    font-family: 'Glacial', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  }
+}
+
+.text-stroke {
+  color: #3D6E1B;
+  -webkit-text-stroke: 16px #000;
+}
+
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
@@ -17,24 +111,24 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
 
-    --primary: 45 100% 51%;
-    --primary-foreground: 0 0% 0%;
+  --primary: 45 100% 51%;
+  --primary-foreground: 0 0% 0%;
 
-    --secondary: 18 88% 55%;
-    --secondary-foreground: 0 0% 100%;
+  --secondary: 18 88% 55%;
+  --secondary-foreground: 0 0% 100%;
 
-    --muted: 45 100% 51%;
+  --muted: 45 100% 51%;
     --muted-foreground: 0 0% 40%;
 
-    --accent: 142 76% 36%;
+  --accent: 142 76% 36%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 0%;
-    --input: 0 0% 100%;
-    --ring: 0 0% 0%;
+  --border: 0 0% 0%;
+  --input: 0 0% 100%;
+  --ring: 0 0% 0%;
 
     --radius: 1rem;
 
@@ -65,24 +159,24 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
 
-    --primary: 45 100% 51%;
-    --primary-foreground: 0 0% 0%;
+  --primary: 45 100% 51%;
+  --primary-foreground: 0 0% 0%;
 
-    --secondary: 18 88% 55%;
-    --secondary-foreground: 0 0% 100%;
+  --secondary: 18 88% 55%;
+  --secondary-foreground: 0 0% 100%;
 
-    --muted: 45 100% 51%;
-    --muted-foreground: 0 0% 40%;
+  --muted: 45 100% 51%;
+  --muted-foreground: 0 0% 40%;
 
-    --accent: 142 76% 36%;
-    --accent-foreground: 0 0% 100%;
+  --accent: 142 76% 36%;
+  --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 0%;
-    --input: 0 0% 100%;
-    --ring: 0 0% 0%;
+  --border: 0 0% 0%;
+  --input: 0 0% 100%;
+  --ring: 0 0% 0%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -99,8 +193,12 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -113,9 +211,34 @@ All colors MUST be HSL.
     -webkit-text-stroke: 3px black;
     paint-order: stroke fill;
   }
-  
   .text-stroke-thin {
     -webkit-text-stroke: 2px black;
     paint-order: stroke fill;
   }
+  /* Portfolio-specific helpers */
+  .container-narrow { max-width: 960px; }
+  .font-opsilon { font-family: 'Opsilon', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }
+  .font-graphy { font-family: 'Graphy', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }
+
+  /* Experience section background image
+    Use an asset from /public to avoid Vite CSS-url build warnings. 
+    Place your image at public/images/experience-bg.jpg
+  */
+
+  /* Mobile menu animations */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .animate-fade-in { animation: fade-in 250ms ease-out both; }
+
+  @keyframes slide-up-fade {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .animate-slide-up { animation: slide-up-fade 400ms ease-out both; }
+  .animation-delay-0 { animation-delay: 0ms; }
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
 }
