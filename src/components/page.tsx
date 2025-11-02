@@ -208,16 +208,15 @@ export default function Home() {
       
 
       {/* Scrolling Text */}
-      <div className={`border-y-4 border-black bg-white py-6 overflow-hidden transition-opacity duration-700 ease-out delay-500 ${entered ? 'opacity-100' : 'opacity-0'}`}> 
-        <div className="flex animate-scroll">
-          {[...Array(10)].map((_, i) => (
-            <div key={i} className="flex shrink-0">
-              <span className="text-2xl md:text-4xl font-black mx-8">WEB DEVELOPMENT</span>
-              <span className="text-2xl md:text-4xl font-black mx-8">MODERN DESIGNER</span>
-              <span className="text-2xl md:text-4xl font-black mx-8">REACT DEV</span>
-              <span className="text-2xl md:text-4xl font-black mx-8">FAST LEARNER</span>
-              <span className="text-2xl md:text-4xl font-black mx-8">CURIOUS BUILDER</span>
-              <span className="text-2xl md:text-4xl font-black mx-8">ACCESSIBILITY</span>
+      <div className="border-y-4 border-black bg-white py-6 overflow-hidden"> 
+        <div className="flex animate-scroll flex-nowrap shrink-0" aria-hidden="true">
+          {[0, 1].map((dup) => (
+            <div key={dup} className="flex shrink-0 items-center gap-8 md:gap-12">
+              {[...Array(6)].flatMap((_, i) => (
+                ['WEB DEVELOPMENT','MODERN DESIGNER','REACT DEV','FAST LEARNER','CURIOUS BUILDER','ACCESSIBILITY'].map((label, j) => (
+                  <span key={`lbl-${dup}-${i}-${j}`} className="text-2xl md:text-4xl font-black">{label}</span>
+                ))
+              ))}
             </div>
           ))}
         </div>
@@ -362,7 +361,7 @@ export default function Home() {
               { name: 'Node.js', level: 80 },
               { name: 'Back end', level: 70 },
               { name: 'UI/UX Design', level: 85 }
-            ].map((skill) => (
+            ].map((skill, idx) => (
               <div
                 key={skill.name}
                 className="bg-white border-2 md:border-4 border-black p-5 md:p-6 rounded-3xl font-opsilon group relative cursor-pointer"
@@ -373,8 +372,15 @@ export default function Home() {
                 <div className="relative">
                   <div className="h-3 md:h-4 bg-gray-200 border-2 border-black rounded-full overflow-visible">
                     <div
-                      className="relative h-full bg-[#cf3c15] rounded-full"
-                      style={{ width: `${skill.level}%` }}
+                      className="relative h-full bg-[#cf3c15] rounded-full transition-all duration-700 ease-out"
+                      style={{
+                        width: skillsInView ? `${skill.level}%` : '0%',
+                        transitionDelay: skillsInView ? `${idx * 120}ms` : '0ms',
+                      }}
+                      role="progressbar"
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-valuenow={skill.level}
                     >
                       {/* Percentage badge anchored to the end (right) of the red bar */}
                       <div
@@ -427,16 +433,20 @@ export default function Home() {
       </footer>
 
       <style>{`
-        @keyframes scroll {
+        @keyframes marquee {
           0% {
-            transform: translateX(0);
+            transform: translate3d(0, 0, 0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translate3d(-50%, 0, 0);
           }
         }
         .animate-scroll {
-          animation: scroll 30s linear infinite;
+          animation: marquee 30s linear infinite;
+          will-change: transform;
+          backface-visibility: hidden;
+          transform: translateZ(0);
+          pointer-events: none;
         }
       `}</style>
     </div>
