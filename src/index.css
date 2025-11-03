@@ -195,10 +195,15 @@ All colors MUST be HSL.
 
   html {
     scroll-behavior: smooth;
+    /* Prevent browser auto text inflation on some mobile browsers */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    /* Reduce double-tap to zoom and improve touch ergonomics */
+    touch-action: manipulation;
   }
 
   h1, h2, h3, h4, h5, h6 {

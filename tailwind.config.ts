@@ -1,10 +1,20 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
+    // Use em-based breakpoints so layout doesn't jump when desktop browser zoom changes.
+    // These values mirror Tailwind defaults but converted to em (1em = 16px):
+    screens: {
+      sm: "40em",   // 640px
+      md: "48em",   // 768px
+      lg: "64em",   // 1024px
+      xl: "80em",   // 1280px
+      "2xl": "96em" // 1536px
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -96,5 +106,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 } satisfies Config;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useInView } from '@/hooks/use-in-view';
 // Import assets from src so Vite bundles them correctly
 import logoImg from '@/assets/logo1.png';
@@ -7,12 +7,16 @@ import imgFranky from '@/assets/projects/franky.webp';
 import imgkamartamu from '@/assets/projects/kamartamu.webp';
 import imglouis from '@/assets/projects/thelouis.webp';
 import experienceBg from '../assets/experience.webp';
+import flagID from '@/assets/flags/id.svg';
+import flagEN from '@/assets/flags/en.svg';
 
 
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [entered, setEntered] = useState(false);
+  const [lang, setLang] = useState<'id' | 'en'>(() => (typeof window !== 'undefined' ? (localStorage.getItem('lang') as 'id' | 'en') || 'id' : 'id'));
+  const [switching, setSwitching] = useState(false);
   const navRef = useRef<HTMLElement | null>(null);
   const lastScrollRef = useRef(0);
   const aboutRef = useRef<HTMLDivElement | null>(null);
@@ -28,35 +32,213 @@ export default function Home() {
   const contactInView = useInView(contactRef);
   
 
-  // Ganti data projekmu di sini
-  const PROJECTS = [
-    {
-      title: 'Kampung Inggris Indonesia',
-      desc: 'Website ini berfungsi sebagai media promosi dan informasi bagi calon peserta yang ingin belajar bahasa Inggris dengan sistem intensif seperti di Pare, namun berlokasi di Jogja. di buat pada saat saya magang (PKL).',
-      // Gunakan import agar path selalu benar saat build
-      img: imgKII,
-      url: 'https://kampunginggrisindonesia.com/',
+  // Internationalized strings and data
+  const T = {
+    id: {
+      nav: {
+        about: 'Tentang Saya',
+        experience: 'Pengalaman',
+        projects: 'Proyek',
+        skills: 'Keahlian',
+        contact: 'Kontak',
+      },
+      hero: {
+        line1: 'Hai, selamat datang di',
+        line2: 'website portofolio saya!',
+        cta: 'Lihat Proyek Saya',
+      },
+      about: {
+        heading: 'Tentang Saya',
+        body:
+          'Saya adalah lulusan SMK Telkom Purwokerto jurusan Rekayasa Perangkat Lunak. Saya seorang Frontend, Web Developer, dan Web Designer yang memiliki antusiasme tinggi dalam menciptakan solusi yang efisien dan skalabel. Saya selalu bersemangat untuk mempelajari hal-hal baru serta menggunakan keterampilan saya untuk memberikan kontribusi yang bermakna. Dengan pengalaman yang telah saya peroleh, saya yakin akan kemampuan saya untuk memberikan nilai dan dampak positif bagi setiap tim yang saya ikuti.',
+      },
+      experience: {
+        heading: 'Pengalaman',
+        items: [
+          {
+            role: 'Frontend Developer Magang',
+            company: 'PT Imersa Solusi Teknologi',
+            period: 'Jun 2025 — Oct 2025',
+            desc:
+              'Membangun dan memoles komponen UI (header, hero, section promo) dengan Tailwind dan React, fokus pada performa, aksesibilitas, dan responsivitas.',
+            stack: ['React', 'Tailwind', 'Aksesibilitas'],
+          },
+          {
+            role: 'Desain Magang',
+            company: 'English Cafe Indonesia',
+            period: 'Jun 2025 — Oct 2025',
+            desc:
+              'Mendesain dan memoles komponen UI (seperti header, hero, dan section promo) secara visual menggunakan Figma, dengan penekanan kuat pada responsivitas, performa, dan aksesibilitas desain. Juga mendukung produksi media internal untuk video editing.',
+            stack: ['Figma', 'Module Design', 'Video Editing'],
+          },
+          {
+            role: 'Game Frontend (Proyek Sekolah)',
+            company: 'The Louis',
+            period: '2024',
+            desc:
+              'Mengimplementasikan UI game bergaya pixel-art dan mekanik dasar dengan fokus pada animasi ringan dan kontrol intuitif.',
+            stack: ['HTML5', 'CSS', 'JavaScript'],
+          },
+        ],
+      },
+      projects: {
+        heading: 'Proyek Saya',
+        list: [
+          {
+            title: 'Kampung Inggris Indonesia',
+            desc:
+              'Website untuk promosi dan informasi bagi calon peserta yang ingin belajar bahasa Inggris intensif seperti di Pare, namun berlokasi di Jogja. Dibuat saat magang (PKL).',
+            img: imgKII,
+            url: 'https://kampunginggrisindonesia.com/',
+          },
+          {
+            title: 'Franky Website',
+            desc:
+              'Terinspirasi dari blonded.co. Saat kelas 10, saya membuat redesign yang lebih modern dan interaktif untuk menunjukkan kemampuan frontend dan web design.',
+            img: imgFranky,
+            url: 'https://luewire.github.io/franky/landingpage.html',
+          },
+          {
+            title: 'Kamar Tamu',
+            desc:
+              'Bagian dari tugas PKL dalam tim kecil: mengembangkan section untuk website Villa Kamar Tamu sesuai desain yang ditentukan.',
+            img: imgkamartamu,
+            url: 'https://github.com/Alfianrefinofebrian/kamartamu',
+          },
+          {
+            title: 'Game The Louis',
+            desc:
+              'Proyek game pertama sebagai tugas akhir DPK D kelas 10 (tim). Mengadopsi pixel art dan genre defense ala Plants vs. Zombies.',
+            img: imglouis,
+            url: 'https://luewire.github.io/gamexpplg3-kelompok3/',
+          },
+        ],
+        viewProject: 'Lihat Proyek',
+      },
+      skills: { heading: 'Keahlian' },
+      contact: {
+        heading: 'Hubungi Saya',
+        body: 'Ayo bekerjasama untuk proyek berikutnya!',
+        email: 'Email Saya',
+      },
+      footer: '© 2025 luewire. Dibuat dengan semangat dan cinta.',
     },
-    {
-      title: 'Franky Website',
-      desc: 'Terinspirasi dari blonded.co, namun tampilannya terasa terlalu sederhana. Saat masih duduk di kelas 10, saya mencoba membuat redesign yang lebih modern dan interaktif untuk menunjukkan kemampuan saya di bidang frontend dan web design.',
-      // Kosongkan jika gambar belum ada agar placeholder muncul
-      img: imgFranky,
-      url: 'https://luewire.github.io/franky/landingpage.html',
+    en: {
+      nav: {
+        about: 'About Me',
+        experience: 'Experience',
+        projects: 'Projects',
+        skills: 'Skills',
+        contact: 'Contact',
+      },
+      hero: {
+        line1: 'Hi, welcome to',
+        line2: 'my portfolio website!',
+        cta: 'See My Work',
+      },
+      about: {
+        heading: 'About Me',
+        body:
+          'I graduated from SMK Telkom Purwokerto majoring in Software Engineering. I am a Frontend, Web Developer, and Web Designer passionate about building efficient and scalable solutions. I love learning new things and using my skills to deliver meaningful contributions. With my experience, I am confident in providing value and positive impact to any team I join.',
+      },
+      experience: {
+        heading: 'Experience',
+        items: [
+          {
+            role: 'Frontend Developer Intern',
+            company: 'PT Imersa Solusi Teknologi',
+            period: 'Jun 2025 — Oct 2025',
+            desc:
+              'Built and refined UI components (header, hero, promo sections) with Tailwind and React, focusing on performance, accessibility, and responsiveness.',
+            stack: ['React', 'Tailwind', 'Accessibility'],
+          },
+          {
+            role: 'Design Intern',
+            company: 'English Cafe Indonesia',
+            period: 'Jun 2025 — Oct 2025',
+            desc:
+              'Designed and polished UI components in Figma with strong emphasis on responsiveness, performance, and accessibility. Also supported internal media production for video editing.',
+            stack: ['Figma', 'Module Design', 'Video Editing'],
+          },
+          {
+            role: 'Game Frontend (School Project)',
+            company: 'The Louis',
+            period: '2024',
+            desc:
+              'Implemented pixel-art style UI and basic game mechanics with lightweight animations and intuitive controls.',
+            stack: ['HTML5', 'CSS', 'JavaScript'],
+          },
+        ],
+      },
+      projects: {
+        heading: 'My Projects',
+        list: [
+          {
+            title: 'Kampung Inggris Indonesia',
+            desc:
+              'A website for promotion and information for prospective students wanting an immersive English course similar to Pare, but located in Jogja. Built during my internship.',
+            img: imgKII,
+            url: 'https://kampunginggrisindonesia.com/',
+          },
+          {
+            title: 'Franky Website',
+            desc:
+              "Inspired by blonded.co. Back in grade 10 I created a more modern, interactive redesign to showcase my frontend and web design skills.",
+            img: imgFranky,
+            url: 'https://luewire.github.io/franky/landingpage.html',
+          },
+          {
+            title: 'Kamar Tamu',
+            desc:
+              'Part of an internship assignment in a small team: developing sections for Villa Kamar Tamu’s website based on the given design.',
+            img: imgkamartamu,
+            url: 'https://github.com/Alfianrefinofebrian/kamartamu',
+          },
+          {
+            title: 'The Louis Game',
+            desc:
+              'My first game project as a final assignment in grade 10 (team). Pixel-art visuals and a defense genre inspired by Plants vs. Zombies.',
+            img: imglouis,
+            url: 'https://luewire.github.io/gamexpplg3-kelompok3/',
+          },
+        ],
+        viewProject: 'View Project',
+      },
+      skills: { heading: 'Skills' },
+      contact: {
+        heading: 'Get In Touch',
+        body: "Let's work together on your next project!",
+        email: 'Email Me',
+      },
+      footer: '© 2025 luewire. Built with passion and love.',
     },
-    {
-      title: 'Kamar Tamu',
-      desc: 'Proyek ini dilaksanakan sebagai bagian dari tugas Praktik Kerja Lapangan (PKL) dalam sebuah tim kecil. Kami berkolaborasi untuk mengdevelope section website Villa Kamar Tamu, dengan target menghasilkan website sesuai dengan design yang telah ditentukan.',
-      img:  imgkamartamu,
-      url: 'https://github.com/Alfianrefinofebrian/kamartamu',
-    },
-    {
-      title: 'Game The Louis',
-      desc: 'Ini adalah proyek game pertama saya yang dikembangkan sebagai tugas akhir mata pelajaran DPK D di Kelas 10, dikerjakan bersama timl. Proyek ini berfokus pada pengembangan Game yang mengadopsi gaya visual Pixel Art dan mengambil inspirasi genre defense yang populer (ala Plants vs. Zombies)',
-      img:  imglouis,
-      url: 'https://luewire.github.io/gamexpplg3-kelompok3/',
-    },
-  ];
+  } as const;
+
+  const toggleLang = () => {
+    const next = lang === 'id' ? 'en' : 'id';
+    // Smooth crossfade/slide animation: out -> swap -> in
+    setSwitching(true);
+    window.setTimeout(() => setLang(next), 160);
+    window.setTimeout(() => setSwitching(false), 340);
+  };
+
+  useEffect(() => {
+    localStorage.setItem('lang', lang);
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = lang;
+    }
+  }, [lang]);
+
+  // Small helper to animate language text nicely
+  const LangText = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
+    <span
+      className={`${className} inline-block transition-all duration-300 ease-out ${
+        switching ? 'opacity-0 -translate-y-1 blur-[2px]' : 'opacity-100 translate-y-0 blur-0'
+      }`}
+    >
+      {children}
+    </span>
+  );
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -114,14 +296,33 @@ export default function Home() {
         </div>
         {/* Desktop menu */}
         <div className="hidden md:flex items-center gap-6 lg:gap-10 absolute left-1/2 -translate-x-1/2 whitespace-nowrap">
-          <button onClick={() => scrollToSection('about')} className="hover:text-[#F5C33B]">ABOUT ME</button>
-          <button onClick={() => scrollToSection('experience')} className="hover:text-[#F5C33B]">EXPERIENCE</button>
-          <button onClick={() => scrollToSection('projects')} className="hover:text-[#F5C33B]">PROJECT</button>
-          <button onClick={() => scrollToSection('skills')} className="hover:text-[#F5C33B]">SKILL</button>
-          <button onClick={() => scrollToSection('contact')} className="hover:text-[#F5C33B]">CONTACT</button>
+          <button onClick={() => scrollToSection('about')} className="hover:text-[#F5C33B]">
+            <LangText>{T[lang].nav.about.toUpperCase()}</LangText>
+          </button>
+          <button onClick={() => scrollToSection('experience')} className="hover:text-[#F5C33B]">
+            <LangText>{T[lang].nav.experience.toUpperCase()}</LangText>
+          </button>
+          <button onClick={() => scrollToSection('projects')} className="hover:text-[#F5C33B]">
+            <LangText>{T[lang].nav.projects.toUpperCase()}</LangText>
+          </button>
+          <button onClick={() => scrollToSection('skills')} className="hover:text-[#F5C33B]">
+            <LangText>{T[lang].nav.skills.toUpperCase()}</LangText>
+          </button>
+          <button onClick={() => scrollToSection('contact')} className="hover:text-[#F5C33B]">
+            <LangText>{T[lang].nav.contact.toUpperCase()}</LangText>
+          </button>
         </div>
         {/* Spacer */}
         <div className="flex-1" />
+        {/* Language toggle */}
+        <button
+          onClick={toggleLang}
+          className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border-2 border-black overflow-hidden flex items-center justify-center"
+          aria-label={lang === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
+          title={lang === 'id' ? 'English' : 'Indonesia'}
+        >
+          <img src={lang === 'id' ? flagEN : flagID} alt={lang === 'id' ? 'English flag' : 'Indonesian flag'} className={`w-full h-full object-cover transition-transform duration-300 ${switching ? 'rotate-180 scale-90' : 'rotate-0 scale-100'}`} />
+        </button>
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen((v) => !v)}
@@ -154,11 +355,21 @@ export default function Home() {
             ×
           </button>
           <div className="text-center space-y-6 uppercase tracking-wide">
-            <button onClick={() => scrollToSection('about')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-0">About Me</button>
-            <button onClick={() => scrollToSection('experience')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-100">Experience</button>
-            <button onClick={() => scrollToSection('projects')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-200">Projects</button>
-            <button onClick={() => scrollToSection('skills')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-300">Skills</button>
-            <button onClick={() => scrollToSection('contact')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-400">Contact</button>
+            <button onClick={() => scrollToSection('about')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-0">
+              <LangText>{T[lang].nav.about}</LangText>
+            </button>
+            <button onClick={() => scrollToSection('experience')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-100">
+              <LangText>{T[lang].nav.experience}</LangText>
+            </button>
+            <button onClick={() => scrollToSection('projects')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-200">
+              <LangText>{T[lang].nav.projects}</LangText>
+            </button>
+            <button onClick={() => scrollToSection('skills')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-300">
+              <LangText>{T[lang].nav.skills}</LangText>
+            </button>
+            <button onClick={() => scrollToSection('contact')} className="block text-white text-2xl md:text-3xl font-extrabold hover:text-[#F5C33B] transition-colors animate-slide-up animation-delay-400">
+              <LangText>{T[lang].nav.contact}</LangText>
+            </button>
           </div>
         </div>
       )}
@@ -190,17 +401,21 @@ export default function Home() {
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center pt-24 pb-12 px-4">
         <div className="text-center max-w-6xl mx-auto">
-          <h2 className={`text-[33vw] md:text-[20vw] font-black uppercase relative font-graphy text-stroke transition-all duration-700 ease-out ${entered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 font-glacial'}`}>
+          <h2
+            aria-hidden="true"
+            className={`pointer-events-none select-none text-[33vw] md:text-[20vw] font-black uppercase relative font-graphy text-stroke transition-all duration-700 ease-out ${entered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 font-glacial'}`}
+          >
             luewire
           </h2>
           <p className={`text-[6vw] md:text-[2.5vw] font-bold text-[#1f1f1f] mb-12 max-w-3xl mx-auto transition-all duration-700 ease-out delay-150 font-glacial ${entered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            Hi, welcome to <span className="block md:inline">my portofolio website!</span>
+            <span className="block"><LangText>{T[lang].hero.line1}</LangText></span>
+            <span className="block"><LangText>{T[lang].hero.line2}</LangText></span>
           </p>
           <button
             onClick={() => scrollToSection('projects')}
             className={`px-9 py-5 text-xl md:px-12 md:py-6 md:text-2xl font-black bg-black text-white border-2 md:border-4 border-black hover:bg-[#cf3c15] hover:border-[#cf3c15] transition-colors rounded-full uppercase transition-all duration-700 ease-out delay-300 ${entered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
           >
-            See My Work
+            <LangText>{T[lang].hero.cta}</LangText>
           </button>
         </div>
       </section>
@@ -226,11 +441,11 @@ export default function Home() {
       <section id="about" className="min-h-screen flex items-center py-16 md:py-24 px-4">
         <div ref={aboutRef} className={`container mx-auto max-w-6xl transition-all duration-700 ease-out ${aboutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <h3 className="text-6xl md:text-9xl font-black text-black uppercase mb-12 text-center font-opsilon">
-            About Me
+            <LangText>{T[lang].about.heading}</LangText>
           </h3>
           <div className="bg-white border-2 md:border-4 border-black p-6 md:p-12 rounded-3xl">
             <p className="text-sm md:text-2xl font-bold text-black mb-6 leading-normal">
-              Saya adalah lulusan SMK Telkom Purwokerto jurusan Rekayasa Perangkat Lunak. Saya seorang Frontend, Web Developer, dan Web Designer yang memiliki antusiasme tinggi dalam menciptakan solusi yang efisien dan skalabel. Saya selalu bersemangat untuk mempelajari hal-hal baru serta menggunakan keterampilan saya untuk memberikan kontribusi yang bermakna. Dengan pengalaman yang telah saya peroleh, saya yakin akan kemampuan saya untuk memberikan nilai dan dampak positif bagi setiap tim yang saya ikuti.
+              <LangText>{T[lang].about.body}</LangText>
             </p>
           </div>
         </div>
@@ -246,53 +461,28 @@ export default function Home() {
         <div className="absolute inset-0 bg-[#58C4FE]/25" aria-hidden="true" />
         <div ref={experienceRef} className={`relative z-10 container mx-auto max-w-6xl transition-all duration-700 ease-out ${experienceInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <h3 className="text-5xl md:text-8xl font-black text-black text-outlined-thin uppercase mb-12 text-center font-opsilon">
-            Experience
+            <LangText>{T[lang].experience.heading}</LangText>
           </h3>
           <div className="space-y-6 md:space-y-8">
-            {[
-              {
-                role: 'Frontend Developer Intern',
-                company: 'PT Imersa Solusi Teknologi',
-                period: 'Jun 2025 — Oct 2025',
-                desc:
-                  'Membangun dan memoles komponen UI (header, hero, section promo) dengan Tailwind dan React, fokus pada performa, aksesibilitas, dan responsivitas.',
-                stack: ['React', 'Tailwind', 'Accessibility'],
-              },
-              {
-                role: 'Design Intern',
-                company: 'English Cafe Indonesia',
-                period: 'Jun 2025 — Oct 2025',
-                desc:
-                  'Mendesain dan memoles komponen UI (seperti header, hero, dan section promo) secara visual menggunakan Figma, dengan penekanan kuat pada responsivitas, performa, dan aksesibilitas desain (A11y-aware design). Menggunakan keahlian Module Design untuk merancang modul (buku/bahan ajar) yang terstruktur sebagai panduan desain dan teknis proyek. Selain itu, memberikan dukungan Produksi Media Internal dengan melaksanakan tugas Video Editing untuk keperluan kantor, termasuk materi pelatihan dan komunikasi internal.',
-                stack: ['Figma', 'Module Design', 'Video Editing'],
-              },
-              {
-                role: 'Game Frontend (School Project)',
-                company: 'The Louis',
-                period: '2024',
-                desc:
-                  'Mengimplementasikan UI game bergaya pixel-art dan mekanik dasar dengan fokus pada animasi ringan dan kontrol intuitif.',
-                stack: ['HTML5', 'CSS', 'JavaScript'],
-              },
-            ].map((exp, i) => (
+            {T[lang].experience.items.map((exp, i) => (
               <div
                 key={exp.role + i}
                 className={`bg-white border-2 md:border-4 border-black p-6 md:p-8 rounded-3xl transition-all duration-700 ease-out ${experienceInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} ${i === 0 ? 'delay-0' : i === 1 ? 'delay-100' : 'delay-200'}`}
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                   <div>
-                    <h4 className="text-2xl md:text-3xl font-black font-opsilon">{exp.role}</h4>
-                    <p className="text-lg md:text-xl font-bold text-gray-700">{exp.company}</p>
+                    <h4 className="text-2xl md:text-3xl font-black font-opsilon"><LangText>{exp.role}</LangText></h4>
+                    <p className="text-lg md:text-xl font-bold text-gray-700"><LangText>{exp.company}</LangText></p>
                   </div>
                   <span className="self-start md:self-auto inline-block px-3 py-1 text-sm md:text-base font-black bg-black text-white border-2 md:border-4 border-black rounded-full">
-                    {exp.period}
+                    <LangText>{exp.period}</LangText>
                   </span>
                 </div>
-                <p className="mt-4 text-base md:text-lg font-bold text-gray-800">{exp.desc}</p>
+                <p className="mt-4 text-base md:text-lg font-bold text-gray-800"><LangText>{exp.desc}</LangText></p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {exp.stack.map((tag) => (
                     <span key={tag} className="px-3 py-1 text-xs md:text-sm font-black bg-[#fbbb04] text-black border-2 border-black rounded-full">
-                      {tag}
+                      <LangText>{tag}</LangText>
                     </span>
                   ))}
                 </div>
@@ -306,10 +496,10 @@ export default function Home() {
   <section id="projects" className="min-h-screen py-16 md:py-24 px-4 bg-[#cf3c15]">
         <div ref={projectsRef} className="container mx-auto max-w-6xl">
           <h3 className="text-5xl md:text-8xl font-black text-white text-outlined-thin uppercase mb-10 md:mb-12 text-center font-opsilon">
-            My Projects
+            <LangText>{T[lang].projects.heading}</LangText>
           </h3>
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-            {PROJECTS.map((p, idx) => {
+            {T[lang].projects.list.map((p, idx) => {
               const isLeft = idx % 2 === 0;
               const hiddenDir = isLeft
                 ? 'opacity-0 translate-y-6 md:-translate-x-10 md:translate-y-0'
@@ -328,8 +518,8 @@ export default function Home() {
                     <span className="text-4xl md:text-6xl font-black text-white text-outlined">#{idx + 1}</span>
                   )}
                 </div>
-                <h4 className="text-2xl md:text-3xl font-black mb-4 font-opsilon">{p.title}</h4>
-                <p className="text-base md:text-lg font-bold text-gray-700 mb-6 ">{p.desc}</p>
+                <h4 className="text-2xl md:text-3xl font-black mb-4 font-opsilon"><LangText>{p.title}</LangText></h4>
+                <p className="text-base md:text-lg font-bold text-gray-700 mb-6 "><LangText>{p.desc}</LangText></p>
                 {p.url ? (
                   <a
                     href={p.url}
@@ -337,7 +527,7 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="inline-block px-5 py-2.5 text-base md:px-6 md:py-3 md:text-lg font-black bg-black text-white border-2 md:border-4 border-black hover:bg-[#fbbb04] hover:text-black transition-colors rounded-full"
                   >
-                    View Project
+                    <LangText>{T[lang].projects.viewProject}</LangText>
                   </a>
                 ) : null}
               </div>
@@ -351,7 +541,7 @@ export default function Home() {
       <section id="skills" className="min-h-screen flex items-center py-16 md:py-24 px-4">
         <div ref={skillsRef} className={`container mx-auto max-w-6xl transition-all duration-700 ease-out ${skillsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <h3 className="text-5xl md:text-8xl font-black text-white text-outlined-thin uppercase mb-12 text-center font-opsilon">
-            Skills
+            <LangText>{T[lang].skills.heading}</LangText>
           </h3>
           <div className="grid md:grid-cols-3 gap-6 md:gap-8">
             {[ 
@@ -404,15 +594,15 @@ export default function Home() {
       <section id="contact" className="min-h-screen flex items-center py-16 md:py-24 px-4 bg-black">
         <div ref={contactRef} className={`container mx-auto max-w-4xl transition-all duration-700 ease-out ${contactInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <h3 className="text-5xl md:text-8xl font-black text-[#fbbb04] uppercase mb-12 text-center font-opsilon">
-            Get In Touch
+            <LangText>{T[lang].contact.heading}</LangText>
           </h3>
           <div className="bg-white border-2 md:border-4 border-[#fbbb04] p-6 md:p-12 rounded-3xl">
             <p className="text-lg md:text-2xl font-bold text-black mb-8 text-center">
-              Let's work together on your next project!
+              <LangText>{T[lang].contact.body}</LangText>
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <a href="mailto:luewire@email.com" className="px-6 py-3 text-base md:px-8 md:py-4 md:text-xl font-black bg-[#fbbb04] text-black border-2 md:border-4 border-black hover:scale-110 transition-transform rounded-full">
-                Email Me
+                <LangText>{T[lang].contact.email}</LangText>
               </a>
               <a href="https://github.com/luewire" target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-base md:px-8 md:py-4 md:text-xl font-black bg-black text-white border-2 md:border-4 border-[#fbbb04] hover:scale-110 transition-transform rounded-full">
                 GitHub
