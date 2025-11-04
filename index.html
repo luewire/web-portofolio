@@ -16,9 +16,46 @@
     <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@yourhandle" />
   <meta name="twitter:image" content="/placeholder.svg" />
+  
+  <!-- Inline loader styles for instant paint before JS loads -->
+  <style>
+    /* Basic reset for loader stacking */
+    #app-loader {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: #0a0a0a; /* dark backdrop */
+      color: white;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 300ms ease;
+    }
+    #app-loader.app-loader--hide { opacity: 0; }
+    .loader-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .spinner {
+      width: 52px; height: 52px;
+      border-radius: 9999px;
+      border: 4px solid rgba(255,255,255,0.15);
+      border-top-color: #fbbb04; /* brand yellow */
+      animation: spin 1s linear infinite;
+    }
+    .loader-text { font: 800 14px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #fbbb04; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .spinner { animation: none; border-top-color: #fbbb04; }
+    }
+  </style>
   </head>
 
   <body>
+    <!-- App Loading Overlay -->
+    <div id="app-loader" role="status" aria-live="polite" aria-label="Loading">
+      <div class="loader-wrap">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="loader-text">Loading…</div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
