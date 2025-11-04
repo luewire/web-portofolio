@@ -818,7 +818,7 @@ export default function Home() {
           <h3 className="text-5xl md:text-8xl font-black text-[#fbbb04] uppercase mb-12 text-center font-opsilon">
             <LangText>{T[lang].contact.heading}</LangText>
           </h3>
-          <div className="bg-white border-2 md:border-4 border-[#fbbb04] p-6 md:p-12 rounded-3xl">
+          <div className="relative bg-[#FFBA00] border-2 md:border-4 border-black p-6 md:p-12 rounded-3xl sponge-card">
             <p className="text-lg md:text-2xl font-bold text-black mb-8 text-center">
               <LangText>{T[lang].contact.body}</LangText>
             </p>
@@ -918,6 +918,36 @@ export default function Home() {
             opacity: 1;
             transform: translateX(0) scale(1);
           }
+        }
+        /* SpongeBob-style porous holes overlay for the yellow contact card */
+        .sponge-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          pointer-events: none;
+          /* A handful of soft, dark radial spots placed around the card */
+          background:
+            radial-gradient(circle at 12% 22%, rgba(0,0,0,0.22) 0 10px, rgba(0,0,0,0) 11px),
+            radial-gradient(circle at 28% 68%, rgba(0,0,0,0.2) 0 13px, rgba(0,0,0,0) 14px),
+            radial-gradient(circle at 44% 38%, rgba(0,0,0,0.18) 0 9px, rgba(0,0,0,0) 10px),
+            radial-gradient(circle at 66% 20%, rgba(0,0,0,0.22) 0 11px, rgba(0,0,0,0) 12px),
+            radial-gradient(circle at 78% 56%, rgba(0,0,0,0.22) 0 14px, rgba(0,0,0,0) 15px),
+            radial-gradient(circle at 86% 78%, rgba(0,0,0,0.18) 0 10px, rgba(0,0,0,0) 11px),
+            radial-gradient(circle at 38% 82%, rgba(0,0,0,0.2) 0 12px, rgba(0,0,0,0) 13px),
+            radial-gradient(circle at 56% 58%, rgba(0,0,0,0.18) 0 8px, rgba(0,0,0,0) 9px);
+          opacity: 0.55;
+        }
+        /* Subtle inner bevel so the card feels chunky */
+        .sponge-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          pointer-events: none;
+          box-shadow:
+            inset 0 6px 0 rgba(0,0,0,0.12),
+            inset 0 -8px 0 rgba(0,0,0,0.12);
         }
       `}</style>
     </div>
