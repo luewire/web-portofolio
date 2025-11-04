@@ -120,6 +120,7 @@ export default function Home() {
         heading: 'Hubungi Saya',
         body: 'Ayo bekerjasama untuk proyek berikutnya!',
         email: 'Email Saya',
+        telegram: 'Text me',
       },
       footer: '© 2025 luewire. Dibuat dengan semangat dan cinta.',
     },
@@ -209,6 +210,7 @@ export default function Home() {
         heading: 'Get In Touch',
         body: "Let's work together on your next project!",
         email: 'Email Me',
+        telegram: 'Text me',
       },
       footer: '© 2025 luewire. Built with passion and love.',
     },
@@ -603,6 +605,9 @@ export default function Home() {
             <div className="flex flex-wrap justify-center gap-4">
               <a href="mailto:luewire@email.com" className="px-6 py-3 text-base md:px-8 md:py-4 md:text-xl font-black bg-[#fbbb04] text-black border-2 md:border-4 border-black hover:scale-110 transition-transform rounded-full">
                 <LangText>{T[lang].contact.email}</LangText>
+              </a>
+              <a href="https://t.me/luewire" target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-base md:px-8 md:py-4 md:text-xl font-black bg-[#229ED9] text-white border-2 md:border-4 border-black hover:scale-110 transition-transform rounded-full">
+                <LangText>{T[lang].contact.telegram}</LangText>
               </a>
               <a href="https://github.com/luewire" target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-base md:px-8 md:py-4 md:text-xl font-black bg-black text-white border-2 md:border-4 border-[#fbbb04] hover:scale-110 transition-transform rounded-full">
                 GitHub
