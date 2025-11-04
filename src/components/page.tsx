@@ -24,6 +24,8 @@ export default function Home() {
   const experienceRef = useRef<HTMLDivElement | null>(null);
   const skillsRef = useRef<HTMLDivElement | null>(null);
   const contactRef = useRef<HTMLDivElement | null>(null);
+  const socialRef = useRef<HTMLDivElement | null>(null);
+  const [socialHidden, setSocialHidden] = useState(false);
 
   const aboutInView = useInView(aboutRef);
   const projectsInView = useInView(projectsRef);
@@ -273,6 +275,8 @@ export default function Home() {
             el.classList.remove('-translate-y-full');
           }
         }
+        // Social icons behavior: hide on any scroll; they'll reappear when hovering the edge hot-zone
+        setSocialHidden(true);
         lastScrollRef.current = current;
         ticking = false;
       });
@@ -532,23 +536,62 @@ export default function Home() {
       )}
 
       {/* Social Icons - Left Side */}
-  <div className={`fixed left-6 top-1/2 -translate-y-1/2 z-30 space-y-4 hidden md:flex md:flex-col transition-all duration-700 ease-out delay-200 ${entered ? 'opacity-100 -translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-        <a href="https://github.com/luewire" target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full bg-white border-4 border-black flex items-center justify-center hover:scale-110 transition-transform" aria-label="GitHub">
+      {/* Reveal hot-zone near the edge so icons appear when hovered */}
+      <div
+        className="fixed left-0 top-0 h-screen w-10 z-20 hidden md:block"
+        onMouseEnter={() => setSocialHidden(false)}
+        onMouseMove={() => setSocialHidden(false)}
+        onTouchStart={() => setSocialHidden(false)}
+        aria-label="Reveal social icons"
+      />
+  <div
+    ref={socialRef}
+    onMouseEnter={() => setSocialHidden(false)}
+    onMouseLeave={() => setSocialHidden(true)}
+    className={`fixed left-6 top-1/2 -translate-y-1/2 z-30 space-y-4 hidden md:flex md:flex-col transition-all duration-500 ease-out delay-200 ${entered ? 'opacity-100 -translate-x-0 visible' : 'opacity-0 -translate-x-4 invisible'} ${socialHidden ? 'opacity-0 -translate-x-20 invisible pointer-events-none' : 'opacity-100 translate-x-0 visible'}`}
+  >
+        <a
+          href="https://github.com/luewire"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-16 h-16 rounded-full bg-white border-4 border-black flex items-center justify-center hover:scale-110 transition-transform"
+          aria-label="GitHub"
+          style={{ animation: socialHidden ? 'none' as const : 'popIn 320ms ease-out both', animationDelay: socialHidden ? '0ms' : '0ms' }}
+        >
           <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
           </svg>
         </a>
-        <a href="https://www.linkedin.com/in/muhammad-ridho-zen-4665a22bb/" target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full bg-white border-4 border-black flex items-center justify-center hover:scale-110 transition-transform" aria-label="LinkedIn">
+        <a
+          href="https://www.linkedin.com/in/muhammad-ridho-zen-4665a22bb/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-16 h-16 rounded-full bg-white border-4 border-black flex items-center justify-center hover:scale-110 transition-transform"
+          aria-label="LinkedIn"
+          style={{ animation: socialHidden ? 'none' as const : 'popIn 320ms ease-out both', animationDelay: socialHidden ? '0ms' : '80ms' }}
+        >
           <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
           </svg>
         </a>
-        <a href="https://x.com/luewire1" target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full bg-white border-4 border-black flex items-center justify-center hover:scale-110 transition-transform" aria-label="Twitter">
+        <a
+          href="https://x.com/luewire1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-16 h-16 rounded-full bg-white border-4 border-black flex items-center justify-center hover:scale-110 transition-transform"
+          aria-label="Twitter"
+          style={{ animation: socialHidden ? 'none' as const : 'popIn 320ms ease-out both', animationDelay: socialHidden ? '0ms' : '160ms' }}
+        >
           <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
           </svg>
         </a>
-        <a href="mailto:luewire@email.com" className="w-16 h-16 rounded-full bg-white border-4 border-black flex items-center justify-center hover:scale-110 transition-transform" aria-label="Email">
+        <a
+          href="mailto:luewire@email.com"
+          className="w-16 h-16 rounded-full bg-white border-4 border-black flex items-center justify-center hover:scale-110 transition-transform"
+          aria-label="Email"
+          style={{ animation: socialHidden ? 'none' as const : 'popIn 320ms ease-out both', animationDelay: socialHidden ? '0ms' : '240ms' }}
+        >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
           </svg>
@@ -839,6 +882,20 @@ export default function Home() {
           backface-visibility: hidden;
           transform: translateZ(0);
           pointer-events: none;
+        }
+        @keyframes popIn {
+          0% {
+            opacity: 0;
+            transform: translateX(-16px) scale(0.9);
+          }
+          60% {
+            opacity: 1;
+            transform: translateX(2px) scale(1.03);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+          }
         }
       `}</style>
     </div>
