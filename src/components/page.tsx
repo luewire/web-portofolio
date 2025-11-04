@@ -26,6 +26,27 @@ export default function Home() {
   const contactRef = useRef<HTMLDivElement | null>(null);
   const socialRef = useRef<HTMLDivElement | null>(null);
   const [socialHidden, setSocialHidden] = useState(false);
+  const hideTimerRef = useRef<number | null>(null);
+
+  // Debounced show/hide helpers for social bar to avoid flicker near edge
+  const showSocial = () => {
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    setSocialHidden(false);
+  };
+  const hideSocial = (immediate = false) => {
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    if (immediate) {
+      setSocialHidden(true);
+    } else {
+      hideTimerRef.current = window.setTimeout(() => setSocialHidden(true), 220);
+    }
+  };
 
   const aboutInView = useInView(aboutRef);
   const projectsInView = useInView(projectsRef);
@@ -276,7 +297,7 @@ export default function Home() {
           }
         }
         // Social icons behavior: hide on any scroll; they'll reappear when hovering the edge hot-zone
-        setSocialHidden(true);
+        hideSocial(true);
         lastScrollRef.current = current;
         ticking = false;
       });
@@ -285,6 +306,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('scroll', onScroll);
       clearTimeout(t);
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
     };
   }, [menuOpen]);
 
@@ -539,15 +561,15 @@ export default function Home() {
       {/* Reveal hot-zone near the edge so icons appear when hovered */}
       <div
         className="fixed left-0 top-0 h-screen w-10 z-20 hidden md:block"
-        onMouseEnter={() => setSocialHidden(false)}
-        onMouseMove={() => setSocialHidden(false)}
-        onTouchStart={() => setSocialHidden(false)}
+        onMouseEnter={showSocial}
+        onMouseMove={showSocial}
+        onTouchStart={showSocial}
         aria-label="Reveal social icons"
       />
   <div
     ref={socialRef}
-    onMouseEnter={() => setSocialHidden(false)}
-    onMouseLeave={() => setSocialHidden(true)}
+    onMouseEnter={showSocial}
+    onMouseLeave={() => hideSocial(false)}
     className={`fixed left-6 top-1/2 -translate-y-1/2 z-30 space-y-4 hidden md:flex md:flex-col transition-all duration-500 ease-out delay-200 ${entered ? 'opacity-100 -translate-x-0 visible' : 'opacity-0 -translate-x-4 invisible'} ${socialHidden ? 'opacity-0 -translate-x-20 invisible pointer-events-none' : 'opacity-100 translate-x-0 visible'}`}
   >
         <a
