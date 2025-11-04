@@ -284,6 +284,161 @@ export default function Home() {
     };
   }, [menuOpen]);
 
+  // Small playful eyes that follow the cursor, SpongeBob-inspired (distinct look)
+  function EyesFollowMouse() {
+    const leftRef = useRef<HTMLDivElement | null>(null);
+    const rightRef = useRef<HTMLDivElement | null>(null);
+    const [left, setLeft] = useState({ x: 0, y: 0, scale: 1 });
+    const [right, setRight] = useState({ x: 0, y: 0, scale: 1 });
+    const leftTarget = useRef({ x: 0, y: 0, r: 0 });
+    const rightTarget = useRef({ x: 0, y: 0, r: 0 });
+    const [blinking, setBlinking] = useState(false);
+    const doBlink = () => {
+      if (blinking) return;
+      setBlinking(true);
+      setTimeout(() => setBlinking(false), 150);
+    };
+
+    // Auto-blink every 3–6 seconds with slight randomness, still allows click blink
+    useEffect(() => {
+      let timer: number | undefined;
+      const loop = () => {
+        const next = 3000 + Math.random() * 3000; // 3–6s
+        timer = window.setTimeout(() => {
+          doBlink();
+          loop();
+        }, next);
+      };
+      loop();
+      return () => {
+        if (timer) clearTimeout(timer);
+      };
+    }, []);
+
+    useEffect(() => {
+      const handler = (e: MouseEvent) => {
+        const calcTarget = (el: HTMLDivElement | null) => {
+          if (!el) return { x: 0, y: 0, r: 0 };
+          const rect = el.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = e.clientX - cx;
+          const dy = e.clientY - cy;
+          const maxX = rect.width * 0.22;
+          const maxY = rect.height * 0.18;
+          const angle = Math.atan2(dy, dx);
+          const norm = Math.sqrt((dx * dx) / (maxX * maxX) + (dy * dy) / (maxY * maxY));
+          const r = Math.min(1, norm);
+          return { x: Math.cos(angle) * maxX * r, y: Math.sin(angle) * maxY * r, r };
+        };
+        leftTarget.current = calcTarget(leftRef.current);
+        rightTarget.current = calcTarget(rightRef.current);
+      };
+      let raf = 0;
+      const smooth = () => {
+        const k = 0.12; // easing factor for natural motion
+        setLeft((p) => {
+          const t = leftTarget.current;
+          const nx = p.x + (t.x - p.x) * k;
+          const ny = p.y + (t.y - p.y) * k;
+          const scale = 1 - 0.12 * t.r; // shrink slightly near edge
+          return { x: nx, y: ny, scale };
+        });
+        setRight((p) => {
+          const t = rightTarget.current;
+          const nx = p.x + (t.x - p.x) * k;
+          const ny = p.y + (t.y - p.y) * k;
+          const scale = 1 - 0.12 * t.r;
+          return { x: nx, y: ny, scale };
+        });
+        raf = requestAnimationFrame(smooth);
+      };
+      window.addEventListener('mousemove', handler);
+      raf = requestAnimationFrame(smooth);
+      return () => {
+        window.removeEventListener('mousemove', handler);
+        cancelAnimationFrame(raf);
+      };
+    }, []);
+
+    const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
+    const leftTilt = clamp(-left.y * 0.25, -10, 10);
+    const rightTilt = clamp(-right.y * 0.25, -10, 10);
+
+    return (
+      <div onClick={doBlink} className="mt-10 md:mt-12 flex items-end justify-center gap-6 md:gap-10 select-none pointer-events-auto relative cursor-pointer">
+        {/* Left eye + lashes */}
+        <div className="relative">
+          {/* thick lashes like the reference */}
+          <div
+            className="absolute -top-6 md:-top-7 left-1/2 -translate-x-1/2 flex items-end gap-2 md:gap-3"
+            style={{ transform: `translateX(-50%) rotate(${leftTilt}deg)` }}
+            aria-hidden
+          >
+            <span className="block w-2 h-6 md:w-3 md:h-8 bg-black rounded-sm -rotate-12" />
+            <span className="block w-2 h-7 md:w-3 md:h-9 bg-black rounded-sm" />
+            <span className="block w-2 h-6 md:w-3 md:h-8 bg-black rounded-sm rotate-12" />
+          </div>
+          <div
+            ref={leftRef}
+            className="relative w-28 h-32 md:w-36 md:h-40 rounded-full bg-white border-4 md:border-8 border-black overflow-hidden shadow-[0_10px_0_0_rgba(0,0,0,0.18)_inset]"
+          >
+            {/* iris */}
+            <div
+              className="absolute left-1/2 top-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-black"
+              style={{
+                background:
+                  'radial-gradient(circle at 40% 40%, #87C6FF 0%, #2A80FF 60%, #1261D1 100%)',
+                transform: `translate(calc(-50% + ${left.x}px), calc(-50% + ${left.y}px))`,
+              }}
+            >
+              <div className="absolute left-1/2 top-1/2 w-4 h-4 md:w-5 md:h-5 bg-black rounded-full border-2 border-black" style={{ transform: `translate(-50%, -50%) scale(${left.scale})` }} />
+            </div>
+            {/* eyelids */}
+            <div className="pointer-events-none absolute inset-0 z-10">
+              <div className="absolute left-0 right-0 top-0 bg-black" style={{ height: blinking ? '55%' : '0%', transition: 'height 120ms ease' }} />
+              <div className="absolute left-0 right-0 bottom-0 bg-black" style={{ height: blinking ? '55%' : '0%', transition: 'height 120ms ease' }} />
+            </div>
+          </div>
+        </div>
+
+        {/* Nose removed as requested */}
+
+        {/* Right eye + lashes */}
+        <div className="relative">
+          <div
+            className="absolute -top-6 md:-top-7 left-1/2 -translate-x-1/2 flex items-end gap-2 md:gap-3"
+            style={{ transform: `translateX(-50%) rotate(${rightTilt}deg)` }}
+            aria-hidden
+          >
+            <span className="block w-2 h-6 md:w-3 md:h-8 bg-black rounded-sm -rotate-12" />
+            <span className="block w-2 h-7 md:w-3 md:h-9 bg-black rounded-sm" />
+            <span className="block w-2 h-6 md:w-3 md:h-8 bg-black rounded-sm rotate-12" />
+          </div>
+          <div
+            ref={rightRef}
+            className="relative w-28 h-32 md:w-36 md:h-40 rounded-full bg-white border-4 md:border-8 border-black overflow-hidden shadow-[0_10px_0_0_rgba(0,0,0,0.18)_inset]"
+          >
+            <div
+              className="absolute left-1/2 top-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-black"
+              style={{
+                background:
+                  'radial-gradient(circle at 40% 40%, #87C6FF 0%, #2A80FF 60%, #1261D1 100%)',
+                transform: `translate(calc(-50% + ${right.x}px), calc(-50% + ${right.y}px))`,
+              }}
+            >
+              <div className="absolute left-1/2 top-1/2 w-4 h-4 md:w-5 md:h-5 bg-black rounded-full border-2 border-black" style={{ transform: `translate(-50%, -50%) scale(${right.scale})` }} />
+            </div>
+            <div className="pointer-events-none absolute inset-0 z-10">
+              <div className="absolute left-0 right-0 top-0 bg-black" style={{ height: blinking ? '55%' : '0%', transition: 'height 180ms ease' }} />
+              <div className="absolute left-0 right-0 bottom-0 bg-black" style={{ height: blinking ? '55%' : '0%', transition: 'height 180ms ease' }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FFBA00]">
       {/* Capsule Navbar */}
@@ -602,20 +757,62 @@ export default function Home() {
             <p className="text-lg md:text-2xl font-bold text-black mb-8 text-center">
               <LangText>{T[lang].contact.body}</LangText>
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <a href="mailto:luewire@email.com" className="px-6 py-3 text-base md:px-8 md:py-4 md:text-xl font-black bg-[#fbbb04] text-black border-2 md:border-4 border-black hover:scale-110 transition-transform rounded-full">
-                <LangText>{T[lang].contact.email}</LangText>
+            {/* Pills with logos like the reference, but adapted for contact links */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 justify-items-center">
+              {/* Email */}
+              <a
+                href="mailto:luewire@email.com"
+                className="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black border-2 md:border-4 border-black hover:scale-105 transition-transform"
+                aria-label="Email"
+              >
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <span className="text-base md:text-xl font-black">Email</span>
               </a>
-              <a href="https://t.me/luewire" target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-base md:px-8 md:py-4 md:text-xl font-black bg-[#229ED9] text-white border-2 md:border-4 border-black hover:scale-110 transition-transform rounded-full">
-                <LangText>{T[lang].contact.telegram}</LangText>
+              {/* Telegram */}
+              <a
+                href="https://t.me/luewire"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black border-2 md:border-4 border-black hover:scale-105 transition-transform"
+                aria-label="Telegram"
+              >
+                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M9.96 15.04l-.4 5.64c.57 0 .82-.24 1.12-.53l2.68-2.56 5.56 4.08c1.02.56 1.74.27 2-.95l3.63-17.08h.01c.32-1.52-.55-2.12-1.53-1.75L1.77 9.52C.28 10.12.3 10.96 1.52 11.33l5.55 1.73 12.9-8.12c.61-.37 1.16-.17.71.2"/>
+                </svg>
+                <span className="text-base md:text-xl font-black">Telegram</span>
               </a>
-              <a href="https://github.com/luewire" target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-base md:px-8 md:py-4 md:text-xl font-black bg-black text-white border-2 md:border-4 border-[#fbbb04] hover:scale-110 transition-transform rounded-full">
-                GitHub
+              {/* GitHub */}
+              <a
+                href="https://github.com/luewire"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black border-2 md:border-4 border-black hover:scale-105 transition-transform"
+                aria-label="GitHub"
+              >
+                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.41-4.03-1.41-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49.99.11-.77.42-1.31.76-1.61-2.67-.31-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23.96-.27 1.98-.4 3-.4s2.04.13 3 .4c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.83 1.1.83 2.22v3.29c0 .32.19.7.8.58C20.56 21.79 24 17.3 24 12 24 5.37 18.63 0 12 0z"/>
+                </svg>
+                <span className="text-base md:text-xl font-black">GitHub</span>
               </a>
-              <a href="https://www.linkedin.com/in/muhammad-ridho-zen-4665a22bb/" target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-base md:px-8 md:py-4 md:text-xl font-black bg-[#cf3c15] text-white border-2 md:border-4 border-black hover:scale-110 transition-transform rounded-full">
-                LinkedIn
+              {/* LinkedIn */}
+              <a
+                href="https://www.linkedin.com/in/muhammad-ridho-zen-4665a22bb/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black border-2 md:border-4 border-black hover:scale-105 transition-transform"
+                aria-label="LinkedIn"
+              >
+                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M19 0H5C2.24 0 0 2.24 0 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5V5c0-2.76-2.24-5-5-5zM7.94 19H4.88V8.98h3.06V19zM6.41 7.74c-.98 0-1.77-.8-1.77-1.78 0-.98.79-1.78 1.77-1.78s1.77.8 1.77 1.78c0 .98-.79 1.78-1.77 1.78zM20 19h-3.06v-5.6c0-3.37-4-3.11-4 0V19H9.88V8.98h3.06v1.76c1.4-2.59 7-2.78 7 2.48V19z"/>
+                </svg>
+                <span className="text-base md:text-xl font-black">LinkedIn</span>
               </a>
             </div>
+
+            {/* Eyes follow mouse - playful accent below buttons */}
+            <EyesFollowMouse />
           </div>
         </div>
       </section>
