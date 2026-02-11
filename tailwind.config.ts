@@ -24,7 +24,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Arial', 'Helvetica', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        serif: ['Playfair Display', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -70,6 +71,9 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        'soft-gray': '#F9F9FB',
+        'accent-new': '#1A1A1A', // Renamed to avoid collision with shadcn's accent
+        'charcoal': '#121212',
       },
       borderRadius: {
         lg: "var(--radius)",
