@@ -6,15 +6,6 @@ export default {
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
-    // Use em-based breakpoints so layout doesn't jump when desktop browser zoom changes.
-    // These values mirror Tailwind defaults but converted to em (1em = 16px):
-    screens: {
-      sm: "40em",   // 640px
-      md: "48em",   // 768px
-      lg: "64em",   // 1024px
-      xl: "80em",   // 1280px
-      "2xl": "96em" // 1536px
-    },
     container: {
       center: true,
       padding: "2rem",
@@ -26,89 +17,77 @@ export default {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         serif: ['Playfair Display', 'serif'],
+        // Add custom fonts if needed
+        opsilon: ['Opsilon', 'sans-serif'],
+      },
+      fontSize: {
+        // Clamp-based responsive typography
+        'clamp-sm': 'clamp(0.8rem, 2vw, 1rem)',
+        'clamp-md': 'clamp(1rem, 2.5vw, 1.25rem)',
+        'clamp-lg': 'clamp(1.5rem, 4vw, 2.5rem)',
+        'clamp-xl': 'clamp(2.5rem, 6vw, 4rem)',
+        'clamp-2xl': 'clamp(4rem, 8vw, 9rem)', // For Section Titles
+        'clamp-3xl': 'clamp(6rem, 12vw, 14rem)', // For Hero Title
+        'clamp-number': 'clamp(12rem, 15vw, 22rem)', // For Background Numbers
       },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "#050505", // Deep, rich black
+        foreground: "#EAEAEA", // Soft white for text
+        border: "#1F1F1F", // Subtle border
+        input: "#1F1F1F",
+        ring: "#333333",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#EAEAEA",
+          foreground: "#050505",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "#111111", // Slightly lighter black for cards/sections
+          foreground: "#EAEAEA",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "#222222",
+          foreground: "#888888",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "#3B82F6", // Electric Blue for key interactions
+          foreground: "#FFFFFF",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "#0A0A0A",
+          foreground: "#EAEAEA",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
-        },
-        'soft-gray': '#F9F9FB',
-        'accent-new': '#1A1A1A', // Renamed to avoid collision with shadcn's accent
-        'charcoal': '#121212',
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      spacing: {
+        '18': '4.5rem',
+        '22': '5.5rem',
+        '30': '7.5rem',
+      },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
-        scroll: {
-          "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-50%)" },
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "scroll": "scroll 20s linear infinite",
-        "bounce-slow": "bounce 3s infinite",
+        "fade-in-up": "fade-in-up 0.8s ease-out forwards",
       },
     },
   },
   plugins: [animate],
 } satisfies Config;
+
