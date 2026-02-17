@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLenis } from "@studio-freight/react-lenis";
-import { Menu, X } from "lucide-react";
+import { Instagram, Mail, Menu, Send, X } from "lucide-react";
 import SelectedWorks from "@/components/SelectedWorks";
 import WhatIDo from "@/components/WhatIDo";
 import Footer from "@/components/Footer";
 import Preloader from "@/components/Preloader";
 import TheMind from "@/components/TheMind";
+import PixelatedPhotoBackground from "@/components/PixelatedPhotoBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,6 +16,11 @@ const Index = () => {
     const lenis = useLenis();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const mobileSocials = [
+        { label: "Instagram", href: "https://instagram.com/ridozen", icon: Instagram },
+        { label: "Email", href: "mailto:luewire@gmail.com", icon: Mail },
+        { label: "Telegram", href: "https://t.me/luewire", icon: Send },
+    ];
 
     const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
         e.preventDefault();
@@ -109,29 +115,61 @@ const Index = () => {
             </nav>
 
             {/* Full Screen Mobile Menu Overlay */}
-            <div className={`fixed inset-0 bg-[#050505] z-50 flex flex-col justify-center items-center gap-12 transition-all duration-500 ease-in-out ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
-                {['Services', 'Works', 'Contact'].map((item) => (
-                    <a
-                        key={item}
-                        href={`#${item.toLowerCase()}`}
-                        onClick={(e) => handleScroll(e, `#${item.toLowerCase()}`)}
-                        className="text-5xl font-black uppercase tracking-tighter text-[#EAEAEA] hover:text-stroke transition-all"
-                    >
-                        {item}
-                    </a>
-                ))}
+            <div className={`fixed inset-0 bg-[#050505]/95 backdrop-blur-md z-50 px-6 pb-8 pt-28 flex flex-col justify-between transition-all duration-500 ease-in-out md:hidden ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
+                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-white/40 font-mono">Navigation</span>
+                    <div className="mt-5 flex flex-col gap-4">
+                        {['Services', 'Works', 'Contact'].map((item) => (
+                            <a
+                                key={item}
+                                href={`#${item.toLowerCase()}`}
+                                onClick={(e) => handleScroll(e, `#${item.toLowerCase()}`)}
+                                className="text-4xl font-black uppercase tracking-tight text-[#EAEAEA] hover:text-white transition-colors"
+                            >
+                                {item}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-white/40 font-mono">Connect</span>
+                    <div className="mt-4 grid grid-cols-3 gap-3">
+                        {mobileSocials.map((social) => {
+                            const Icon = social.icon;
+                            return (
+                                <a
+                                    key={social.label}
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="h-20 rounded-xl border border-white/10 bg-black/30 flex flex-col items-center justify-center gap-2 text-white/90 hover:border-white/30 hover:bg-white/5 transition-colors"
+                                >
+                                    <Icon className="w-5 h-5" />
+                                    <span className="text-[11px] uppercase tracking-widest font-mono">{social.label}</span>
+                                </a>
+                            );
+                        })}
+                    </div>
+                </div>
             </div>
 
             {/* Hero Section */}
             <header className="relative w-full h-screen overflow-hidden flex flex-col justify-end pb-12 md:pb-24 px-6 md:px-12 lg:px-24">
+                <PixelatedPhotoBackground
+                    src="/images/IMG_6355-removebg-preview.png"
+                    className="z-0 opacity-80"
+                />
+                <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#050505]/70 via-[#050505]/45 to-[#050505]/85 pointer-events-none" />
 
                 {/* Background Number/Graphic - Subtle Parallax */}
-                <div className="absolute top-0 right-0 p-12 opacity-10 select-none -z-10 bg-number-parallax">
+                <div className="absolute top-0 right-0 p-12 opacity-10 select-none z-[2] bg-number-parallax">
                     <span className="text-[clamp-number] font-black leading-none text-white/5">01</span>
                 </div>
 
                 {/* Main Content Grid */}
-                <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-y-8 md:gap-8 items-end">
+                <div className="relative z-10 w-full grid grid-cols-1 md:grid-cols-12 gap-y-8 md:gap-8 items-end">
 
                     {/* Title Area */}
                     <div className="md:col-span-9 flex flex-col justify-end">
@@ -159,7 +197,7 @@ const Index = () => {
                 </div>
 
                 {/* Footer / Scroll Indicator */}
-                <div className="hero-footer opacity-0 w-full flex justify-between items-end mt-12 border-t border-white/5 pt-6">
+                <div className="hero-footer relative z-10 opacity-0 w-full flex justify-between items-end mt-12 border-t border-white/5 pt-6">
                     <div className="hidden md:flex gap-12">
                         <div className="flex flex-col gap-1">
                             <span className="text-[10px] uppercase tracking-widest text-[#555]">Location</span>
