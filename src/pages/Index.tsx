@@ -68,17 +68,23 @@ const Index = () => {
             "-=0.8"
         );
 
-        // Optional: Parallax for background number
-        gsap.to(".bg-number-parallax", {
-            scrollTrigger: {
-                trigger: "header",
-                start: "top top",
-                end: "bottom top",
-                scrub: 0.2
-            },
-            y: 200,
-            opacity: 0
-        });
+        timeline.fromTo(".nav-logo",
+            { y: -30, opacity: 0, rotateX: -45 },
+            { y: 0, opacity: 1, rotateX: 0, duration: 1.2, ease: "power4.out" },
+            "-=1.4"
+        );
+
+        timeline.fromTo(".nav-link",
+            { y: -20, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out" },
+            "-=1.2"
+        );
+
+        timeline.fromTo(".nav-menu-btn",
+            { scale: 0.5, opacity: 0, rotate: -90 },
+            { scale: 1, opacity: 1, rotate: 0, duration: 1, ease: "back.out(2)" },
+            "-=1.2"
+        );
 
     }, [isLoading]);
 
@@ -90,7 +96,7 @@ const Index = () => {
 
             {/* Navbar (Minimal) */}
             <nav className="fixed top-0 left-0 w-full px-6 py-6 flex justify-between items-center z-[51] mix-blend-difference text-white">
-                <div className="w-12 h-12 md:w-16 md:h-16 relative z-[60]">
+                <div className="nav-logo opacity-0 w-12 h-12 md:w-16 md:h-16 relative z-[60] perspective-1000">
                     <img
                         src="/images/logo/lofo.svg"
                         alt="Zuned Aalim Logo"
@@ -100,14 +106,14 @@ const Index = () => {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex gap-8 font-mono text-xs uppercase tracking-widest text-neutral-400">
-                    <a href="#services" onClick={(e) => handleScroll(e, "#services")} className="hover:text-white transition-colors cursor-pointer">Services</a>
-                    <a href="#works" onClick={(e) => handleScroll(e, "#works")} className="hover:text-white transition-colors cursor-pointer">Works</a>
-                    <a href="#contact" onClick={(e) => handleScroll(e, "#contact")} className="hover:text-white transition-colors cursor-pointer">Contact</a>
+                    <a href="#services" onClick={(e) => handleScroll(e, "#services")} className="nav-link opacity-0 hover:text-white transition-colors cursor-pointer">Services</a>
+                    <a href="#works" onClick={(e) => handleScroll(e, "#works")} className="nav-link opacity-0 hover:text-white transition-colors cursor-pointer">Works</a>
+                    <a href="#contact" onClick={(e) => handleScroll(e, "#contact")} className="nav-link opacity-0 hover:text-white transition-colors cursor-pointer">Contact</a>
                 </div>
 
                 {/* Mobile Hamburger */}
                 <button
-                    className="md:hidden relative z-[60] p-2"
+                    className="nav-menu-btn opacity-0 md:hidden relative z-[60] p-2"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
                     {isMenuOpen ? <X className="w-8 h-8 text-white" /> : <Menu className="w-8 h-8 text-white" />}
