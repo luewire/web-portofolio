@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/home/luewire/Documents/project1/web-portofolio/app/layout":["static/media/6c25f6e897d845a3-s.p.woff2","static/media/49eec060ce8bd0da-s.p.woff2","static/media/bb3ef058b751a6ad-s.p.woff2"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';
