@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@theme {
+  --font-sans: var(--font-plus-jakarta-sans);
+
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-accent: var(--color);
+}
+
+:root {
+  /* Light Theme */
+  --bg: #F1F1F1;
+  --bg-rgb: 241, 241, 241;
+  --text: #1F1F1F;
+  --text-rgb: 31, 31, 31;
+  --color: #E6CDCD;
+  --color-rgb: 230, 205, 205;
+  --glass-text: rgba(31, 31, 31, 0.2);
+  --transition-theme: 0.4s;
+  --transition-mouse: 0.2s;
+  --transition-length: 0.5s;
+  --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-large: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] {
+  /* Dark Theme */
+  --bg: #191919;
+  --bg-rgb: 25, 25, 25;
+  --text: #fffbee;
+  --text-rgb: 255, 251, 238;
+  --color: #8c82ff;
+  --color-rgb: 140, 130, 255;
+  --glass-text: rgba(255, 251, 238, 0.1);
+  --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.7);
+  --shadow-large: 0 0 30px rgba(0, 0, 0, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--bg);
+  transition: background-color var(--transition-theme);
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  color: var(--text);
+  background-color: transparent;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--color);
+  color: #fffbee;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--text-rgb), 0.7);
+  border-radius: 4px;
+}
+
+/* Base styles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  transition: color var(--transition-theme);
+}
+
+/* Custom link effect */
+.link-effect {
+  color: var(--text);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 4px;
+  cursor: pointer;
+  transition: color var(--transition-theme);
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.link-effect::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 33%;
+  border-radius: 4px 0 4px 4px;
+  background-color: var(--glass-text);
+  bottom: 10%;
+  left: 0;
+  transform-origin: right;
+  transform: scaleX(0);
+  transition: transform var(--transition-length) cubic-bezier(0.3, 0.9, 0.3, 0.9);
+  z-index: -1;
+}
+
+.link-effect:hover::before {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+.link-effect:hover {
+  color: #E6CDCD;
+}
