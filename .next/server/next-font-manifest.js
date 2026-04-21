@@ -1,1 +1,1 @@
-self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/luewire/Documents/website/web-portofolio/src/app/layout\":[\"static/media/636a5ac981f94f8b-s.p.woff2\",\"static/media/f09d1505d9899f97-s.p.otf\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
+self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/luewire/Documents/website/web-portofolio/src/app/layout":["static/media/636a5ac981f94f8b-s.p.woff2","static/media/f09d1505d9899f97-s.p.otf"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';
