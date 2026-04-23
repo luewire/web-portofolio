@@ -3,79 +3,88 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useSpring } from "framer-motion";
 
-const InteractiveEyes = () => {
-  const Eye = () => {
-    const eyeRef = useRef<HTMLDivElement>(null);
-    const pupilX = useSpring(0, { stiffness: 170, damping: 24, mass: 0.55 });
-    const pupilY = useSpring(0, { stiffness: 170, damping: 24, mass: 0.55 });
+const Eye = ({ isHovered }: { isHovered: boolean }) => {
+  const eyeRef = useRef<HTMLDivElement>(null);
+  const pupilX = useSpring(0, { stiffness: 170, damping: 24, mass: 0.55 });
+  const pupilY = useSpring(0, { stiffness: 170, damping: 24, mass: 0.55 });
 
-    useEffect(() => {
-      const handlePointerMove = (e: PointerEvent) => {
-        if (!eyeRef.current) {
-          return;
-        }
+  useEffect(() => {
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!eyeRef.current) {
+        return;
+      }
 
-        const rect = eyeRef.current.getBoundingClientRect();
-        const eyeCenterX = rect.left + rect.width / 2;
-        const eyeCenterY = rect.top + rect.height / 2;
+      const rect = eyeRef.current.getBoundingClientRect();
+      const eyeCenterX = rect.left + rect.width / 2;
+      const eyeCenterY = rect.top + rect.height / 2;
 
-        const dx = e.clientX - eyeCenterX;
-        const dy = e.clientY - eyeCenterY;
-        const angle = Math.atan2(dy, dx);
-        const distance = Math.min(Math.hypot(dx, dy), Math.min(rect.width, rect.height) * 0.2);
+      const dx = e.clientX - eyeCenterX;
+      const dy = e.clientY - eyeCenterY;
+      const angle = Math.atan2(dy, dx);
+      const distance = Math.min(Math.hypot(dx, dy), Math.min(rect.width, rect.height) * 0.2);
 
-        pupilX.set(Math.cos(angle) * distance);
-        pupilY.set(Math.sin(angle) * distance);
-      };
+      pupilX.set(Math.cos(angle) * distance);
+      pupilY.set(Math.sin(angle) * distance);
+    };
 
-      window.addEventListener("pointermove", handlePointerMove, { passive: true });
-      return () => window.removeEventListener("pointermove", handlePointerMove);
-    }, [pupilX, pupilY]);
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", handlePointerMove);
+  }, [pupilX, pupilY]);
 
-    return (
-      <div
-        ref={eyeRef}
+  return (
+    <div
+      ref={eyeRef}
+      style={{
+        width: "clamp(110px, 12vw, 170px)",
+        height: "clamp(150px, 17vw, 230px)",
+        background: "white",
+        borderRadius: "999px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "0 12px 30px rgba(0,0,0,0.1)",
+        position: "relative",
+        border: "3px solid #1F1F1F",
+        overflow: "hidden",
+      }}
+    >
+      <motion.div
+        animate={{ 
+          scale: isHovered ? 1.45 : 1,
+        }}
+        transition={{ 
+          type: "spring",
+          stiffness: 80, // Lower stiffness for slower, smoother growth
+          damping: 15,   // Moderate damping for a smooth settle
+          mass: 1
+        }}
         style={{
-          width: "clamp(110px, 12vw, 170px)",
-          height: "clamp(150px, 17vw, 230px)",
-          background: "white",
-          borderRadius: "999px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 12px 30px rgba(0,0,0,0.1)",
+          width: "68%",
+          height: "56%",
+          background: "#1F1F1F",
+          borderRadius: "50%",
+          x: pupilX,
+          y: pupilY,
           position: "relative",
-          border: "3px solid #1F1F1F",
-          overflow: "hidden",
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "center",
+          paddingBottom: "16%",
         }}
       >
-        <motion.div
-          style={{
-            width: "68%",
-            height: "56%",
-            background: "#1F1F1F",
-            borderRadius: "50%",
-            x: pupilX,
-            y: pupilY,
-            position: "relative",
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "center",
-            paddingBottom: "16%",
-          }}
-        >
-          <div style={{
-            width: "24%",
-            height: "24%",
-            background: "white",
-            borderRadius: "50%",
-            opacity: 1,
-          }} />
-        </motion.div>
-      </div>
-    );
-  };
+        <div style={{
+          width: "24%",
+          height: "24%",
+          background: "white",
+          borderRadius: "50%",
+          opacity: 1,
+        }} />
+      </motion.div>
+    </div>
+  );
+};
 
+const InteractiveEyes = ({ isHovered = false }: { isHovered?: boolean }) => {
   return (
     <div style={{
       display: "flex",
@@ -85,8 +94,8 @@ const InteractiveEyes = () => {
       width: "100%",
       height: "100%",
     }}>
-      <Eye />
-      <Eye />
+      <Eye isHovered={isHovered} />
+      <Eye isHovered={isHovered} />
     </div>
   );
 };
@@ -94,6 +103,7 @@ const InteractiveEyes = () => {
 export default function ContactPage() {
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [isHoveringSend, setIsHoveringSend] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -363,6 +373,8 @@ export default function ContactPage() {
                 <motion.button
                   whileHover={{ scale: 1.02, backgroundColor: "#000" }}
                   whileTap={{ scale: 0.98 }}
+                  onMouseEnter={() => setIsHoveringSend(true)}
+                  onMouseLeave={() => setIsHoveringSend(false)}
                   disabled={isSending}
                   style={{
                     marginTop: "8px",
@@ -459,16 +471,20 @@ export default function ContactPage() {
               />
             </svg>
             <motion.p
+              key={isSent ? "sent" : "initial"}
               className="contact-bubble-text"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
             >
-              Hello there! It's a pleasure to connect with you.
+              {isSent 
+                ? "I see you! Your message has been safely delivered."
+                : "Hello there! It's a pleasure to connect with you."
+              }
             </motion.p>
           </motion.div>
           <div className="contact-eyes-wrap" style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-            <InteractiveEyes />
+            <InteractiveEyes isHovered={isHoveringSend} />
           </div>
         </motion.div>
       </div>
