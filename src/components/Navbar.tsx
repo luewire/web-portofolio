@@ -50,12 +50,10 @@ export default function Navbar({
             cursor: "pointer",
           }}
         >
-          <Image
-            src="/images/logo/logo.svg"
+          <img
+            src="/images/logo/lofo.svg"
             alt="Luewire"
-            width={120}
-            height={80}
-            style={{ height: "80px", width: "auto", objectFit: "contain" }}
+            style={{ height: "75px", width: "auto", objectFit: "contain" }}
           />
 
           <AnimatePresence>

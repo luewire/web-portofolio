@@ -54,8 +54,8 @@ const Eye = ({ isHovered }: { isHovered: boolean }) => {
         }}
         transition={{ 
           type: "spring",
-          stiffness: 80, // Lower stiffness for slower, smoother growth
-          damping: 15,   // Moderate damping for a smooth settle
+          stiffness: 80,
+          damping: 15,
           mass: 1
         }}
         style={{
@@ -108,7 +108,7 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSending(true);
-    
+
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
 
@@ -121,7 +121,7 @@ export default function ContactPage() {
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (response.ok) {
         setIsSent(true);
       } else {
@@ -299,7 +299,7 @@ export default function ContactPage() {
 
       <div className="contact-layout">
         {/* Form Column */}
-        <div style={{ 
+        <div style={{
           position: "relative",
           width: "100%",
         }}>
@@ -393,7 +393,7 @@ export default function ContactPage() {
                 >
                   {isSending ? "Sending..." : "Send Message"}
                 </motion.button>
-                
+
                 <div style={{ marginTop: "14px" }}>
                   <span style={{ fontSize: "1rem", fontWeight: 500, opacity: 0.4 }}>or </span>
                   <a href="mailto:luewire@gmail.com" style={{ fontSize: "1.1rem", fontWeight: 700, color: "#6B5B9E", textDecoration: "none", borderBottom: "2px solid rgba(107, 91, 158, 0.2)" }}>email me directly</a>
@@ -423,7 +423,7 @@ export default function ContactPage() {
                 <p style={{ fontSize: "1.2rem", fontWeight: 500, opacity: 0.6, margin: 0, lineHeight: 1.5 }}>
                   Thank you for reaching out. I'll get back to you as soon as possible.
                 </p>
-                <button 
+                <button
                   onClick={() => setIsSent(false)}
                   style={{
                     marginTop: "20px",

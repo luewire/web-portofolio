@@ -128,27 +128,6 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "12px" }}>
-                <button
-                  onClick={onBack}
-                  aria-label="Back to home"
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: 0,
-                    color: "var(--text)",
-                    opacity: 0.5,
-                    display: "flex",
-                    alignItems: "center",
-                    transition: "opacity 0.2s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.5")}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="m15 18-6-6 6-6" />
-                  </svg>
-                </button>
                 <h1
                   style={{
                     fontSize: "clamp(2rem, 4vw, 3rem)",
@@ -252,83 +231,6 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
               position: "relative",
             }}
           >
-            {/* Floating Back Button */}
-            <motion.div
-              initial={{ opacity: 0, x: -80 }}
-              animate={{ opacity: 1, x: 0, transition: { duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] } }}
-              exit={{ opacity: 0, x: -80, transition: { duration: 0.4, ease: "easeIn" } }}
-              style={{
-                position: "absolute",
-                top: "50%",
-                marginTop: "-36px", // offsets half of 72px
-                left: "4%",
-                zIndex: 50,
-              }}
-            >
-              <motion.button
-                onClick={() => setSelectedProject(null)}
-                initial="rest"
-                whileHover="hover"
-                animate="rest"
-                style={{
-                  position: "relative",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: 0,
-                  width: "72px",
-                  height: "72px",
-                }}
-              >
-                {/* The "Back" Pill */}
-                <motion.div
-                  variants={{
-                    rest: { opacity: 0, x: -20, scale: 0.9, pointerEvents: "none" },
-                    hover: { opacity: 1, x: 0, scale: 1, pointerEvents: "auto" }
-                  }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  style={{
-                    position: "absolute",
-                    left: "100%",
-                    marginLeft: "-20px", // overlaps behind the circle
-                    background: "#F8F5EE", // Light cream like screenshot
-                    color: "#1A1A1A",
-                    padding: "10px 24px 10px 32px", // Extra left padding for overlap
-                    borderRadius: "24px",
-                    fontWeight: 600,
-                    fontSize: "1.1rem",
-                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                    zIndex: 40, // Behind the circle
-                  }}
-                >
-                  Back
-                </motion.div>
-
-                {/* The Circle Button */}
-                <div
-                  style={{
-                    width: "72px",
-                    height: "72px",
-                    borderRadius: "36px",
-                    background: "#F8F5EE",
-                    color: "#1A1A1A",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                    zIndex: 50,
-                    position: "relative",
-                  }}
-                >
-                  {/* Rounded solid triangle pointing left */}
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8.288 10.45l7.07-4.242c1.44-.864 3.253.174 3.253 1.855v8.484c0 1.681-1.813 2.719-3.253 1.855l-7.07-4.242c-1.332-.8-1.332-2.91 0-3.71z" fill="currentColor"/>
-                  </svg>
-                </div>
-              </motion.button>
-            </motion.div>
 
             {/* Scrollable Container */}
             <div

@@ -23,7 +23,7 @@ export default function HeroLogo({
     >
       {showTitle && (
         <motion.h1
-          className="text-[5rem] md:text-[9rem] xl:text-[11rem] tracking-normal text-[#E6CDCD] leading-none m-0"
+          className="text-[6.5rem] md:text-[9rem] xl:text-[11rem] tracking-normal text-[#E6CDCD] leading-none m-0"
           style={{
             fontFamily: 'var(--font-graffiti)',
             textShadow: '-1px -1px 0 #1F1F1F, 1px -1px 0 #1F1F1F, -1px 1px 0 #1F1F1F, 1px 1px 0 #1F1F1F'

@@ -127,7 +127,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
               fontWeight: 500,
               opacity: 0.9,
             }}>
-              I'm <span style={{ fontWeight: 700 }}>Ridho Zen</span>, a frontend developer passionate about building interactive and highly functional digital experiences. I focus my work on crafting seamless web applications, constantly exploring modern frameworks like Next.js and React to bring complex ideas to the browser.
+              I'm <span style={{ fontWeight: 700 }}>Ridho Zen</span>, a frontend developer passionate about building interactive and highly functional digital experiences. I focus my work on crafting seamless web applications, constantly exploring modern frameworks like Next.js and React to bring complex ideas to the browser and app.
             </p>
             <p style={{
               fontSize: "clamp(0.95rem, 1.1vw, 1.05rem)",

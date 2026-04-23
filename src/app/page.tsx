@@ -52,7 +52,7 @@ export default function Home() {
             <motion.h1
               style={{
                 fontFamily: "var(--font-graffiti)",
-                fontSize: "clamp(4rem, 14vw, 12rem)",
+                fontSize: "clamp(6rem, 14vw, 12rem)",
                 color: "#E6CDCD",
                 textShadow: "-1px -1px 0 #1F1F1F, 1px -1px 0 #1F1F1F, -1px 1px 0 #1F1F1F, 1px 1px 0 #1F1F1F",
                 lineHeight: 1,
@@ -62,7 +62,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-              onAnimationComplete={() => {}}
+              onAnimationComplete={() => { }}
             >
               LUEWIRE
             </motion.h1>
@@ -92,7 +92,7 @@ export default function Home() {
 
             {/* Content area */}
             <motion.div
-              animate={{ 
+              animate={{
                 scale: isMenuOpen ? 0.95 : 1,
                 filter: isMenuOpen ? "blur(6px)" : "blur(0px)",
                 opacity: isMenuOpen ? 0.4 : 1,
@@ -127,7 +127,7 @@ export default function Home() {
                     <motion.h2
                       style={{
                         fontFamily: "var(--font-graffiti)",
-                        fontSize: "clamp(4rem, 13vw, 10rem)",
+                        fontSize: "clamp(6rem, 13vw, 10rem)",
                         color: "#E6CDCD",
                         textShadow: "-1px -1px 0 #1F1F1F, 1px -1px 0 #1F1F1F, -1px 1px 0 #1F1F1F, 1px 1px 0 #1F1F1F",
                         lineHeight: 1,
