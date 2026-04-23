@@ -1,4 +1,5 @@
 import { Marquee } from "@/src/components/shadcn-space/animations/marquee";
+import Image from "next/image";
 
 type BrandList = {
   image: string;
@@ -45,14 +46,18 @@ export default function MarqueeBrandsDemo() {
       <Marquee className="[--duration:20s] p-0" pauseOnHover>
         {brandList.map((brand, index) => (
           <div key={index}>
-            <img
+            <Image
               src={brand.image}
               alt={brand.name}
+              width={144}
+              height={32}
               className="w-36 h-8 mr-6 lg:mr-20 dark:hidden"
             />
-            <img
+            <Image
               src={brand.lightimg}
               alt={brand.name}
+              width={144}
+              height={32}
               className="hidden dark:block w-36 h-8 mr-12 lg:mr-20"
             />
           </div>

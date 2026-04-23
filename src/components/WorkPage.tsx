@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const projects = [
   {
@@ -16,7 +17,7 @@ const projects = [
       "Platform digital untuk industri pertanian dengan arsitektur kompleks dan optimasi SEO tinggi. Menampilkan manajemen konten, performa tinggi, dan desain bersih untuk solusi nyata di sektor pertanian.",
     accent: "#4A7C59",
     preview: "RF",
-    image: "/image/projects/risefarm.png",
+    image: "/image/projects/risefarm.webp",
   },
   {
     name: "Ebookin Aja",
@@ -30,7 +31,7 @@ const projects = [
       "Platform baca digital dengan antarmuka modern yang dirancang ulang. Menampilkan navigasi intuitif dan transisi halaman halus untuk pengalaman membaca yang menyenangkan.",
     accent: "#6B5B9E",
     preview: "EA",
-    image: "/image/projects/ebookinaja.png",
+    image: "/image/projects/ebookinaja.webp",
   },
   {
     name: "THE LOUIS",
@@ -44,7 +45,21 @@ const projects = [
       "Game pertahanan berbasis pixel art yang dikembangkan saat kelas 10. Menampilkan logika pertahanan, aset pixel art original, dan mekanik game yang solid.",
     accent: "#C0392B",
     preview: "TL",
-    image: "/image/projects/thelouis.png",
+    image: "/image/projects/thelouis.webp",
+  },
+  {
+    name: "Kampung Inggris Indonesia",
+    category: "English Education Platform",
+    year: "2026",
+    link: "https://kampunginggrisindonesia.com",
+    linkLabel: "kampunginggrisindonesia.com",
+    roles: ["Frontend Development", "SEO Optimization"],
+    tech: ["Next.js", "Tailwind CSS", "SEO Optimization"],
+    description:
+      "Platform edukasi bahasa Inggris terpadu untuk pembelajaran intensif. Dirancang dengan fokus pada user experience dan aksesibilitas untuk membantu siswa menguasai bahasa Inggris dengan lebih efektif.",
+    accent: "#E67E22",
+    preview: "KI",
+    image: "/image/projects/kampunginggrisindonesia.webp",
   },
 ];
 
@@ -68,8 +83,8 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
       key="work-page"
       initial={{ opacity: 0, y: 40, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 60, scale: 0.95, filter: "blur(5px)", transition: { duration: 0.4, ease: [0.4, 0, 1, 1] } }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      exit={{ opacity: 0, y: 34, scale: 0.985, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       style={{
         position: "relative",
         width: "100%",
@@ -88,7 +103,7 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             style={{
               position: "relative",
               width: "100%",
@@ -158,8 +173,8 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
                     key={project.name}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, x: -40, filter: "blur(8px)", transition: { duration: 0.4, delay: index * 0.04, ease: [0.4, 0, 1, 1] } }}
-                    transition={{ duration: 0.6, delay: 0.1 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    exit={{ opacity: 0, x: -24, transition: { duration: 0.55, delay: index * 0.03, ease: [0.22, 1, 0.36, 1] } }}
+                    transition={{ duration: 0.75, delay: 0.08 + index * 0.06, ease: [0.22, 1, 0.36, 1] }}
                     onMouseEnter={() => setHovered(project.name)}
                     onMouseLeave={() => setHovered(null)}
                     onClick={() => setSelectedProject(project)}
@@ -229,7 +244,7 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
             key="detail"
             initial={{ opacity: 0, y: 60, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }}
-            exit={{ opacity: 0, transition: { duration: 0.8, delay: 0.3 } }}
+            exit={{ opacity: 0, transition: { duration: 0.65, delay: 0.12, ease: [0.22, 1, 0.36, 1] } }}
             style={{
               width: "100%",
               flex: 1,
@@ -340,17 +355,25 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
                   }}
                 >
                   {selectedProject.image ? (
-                    <img
-                      src={selectedProject.image}
-                      alt={selectedProject.name}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        display: "block",
-                        borderRadius: "16px",
-                        border: "1px solid rgba(128,128,128,0.15)",
-                      }}
-                    />
+                    <div style={{
+                      position: "relative",
+                      width: "100%",
+                      aspectRatio: "16/9",
+                      borderRadius: "16px",
+                      overflow: "hidden",
+                      border: "1px solid rgba(128,128,128,0.15)",
+                    }}>
+                      <Image
+                        src={selectedProject.image}
+                        alt={selectedProject.name}
+                        fill
+                        sizes="(max-width: 1200px) 100vw, 1000px"
+                        style={{
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                    </div>
                   ) : (
                     <div style={{
                       height: "55vh",

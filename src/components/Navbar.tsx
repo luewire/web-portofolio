@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const rotateStyle = `
   .menu-dots:hover .menu-dots-grid {
@@ -37,22 +38,23 @@ export default function Navbar({
         }}
       >
         {/* Left: Logo + animated "luewire" name */}
-        <motion.div 
+        <motion.div
           onClick={goHome}
           whileHover={{ scale: 0.96 }}
           whileTap={{ scale: 0.92 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          style={{ 
-            display: "flex", 
-            alignItems: "center", 
+          style={{
+            display: "flex",
+            alignItems: "center",
             gap: "14px",
             cursor: "pointer",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/image/logo/Vector.svg"
+          <Image
+            src="/images/logo/logo.svg"
             alt="Luewire"
+            width={120}
+            height={80}
             style={{ height: "80px", width: "auto", objectFit: "contain" }}
           />
 

@@ -1,37 +1,95 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Marquee as ShadcnMarquee } from "@/src/components/shadcn-space/animations/marquee";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useSpring } from "framer-motion";
 
-const exampleImages = [
-  "https://cdn.cosmos.so/4b771c5c-d1eb-4948-b839-255dbeb931ba?format=jpeg",
-  "https://cdn.cosmos.so/a8d82afd-2293-43ad-bac3-887683d85b44?format=jpeg",
-  "https://cdn.cosmos.so/49206ba5-c174-4cd5-aee8-5b744842e6c2?format=jpeg",
-  "https://cdn.cosmos.so/b29bd150-6477-420f-8efb-65ed99694421?format=jpeg",
-  "https://cdn.cosmos.so/e1a0313e-7617-431d-b7f1-f1b169e6bcb4?format=jpeg",
-  "https://cdn.cosmos.so/ad640c12-69fb-4186-bc3d-b1cc93986a37?format=jpeg",
-  "https://cdn.cosmos.so/5cf0c3d2-e785-41a3-b0c8-a073ee2f2862?format=jpeg",
-  "https://cdn.cosmos.so/938ab21c-a975-41b3-b303-418290343b09?format=jpeg",
-  "https://cdn.cosmos.so/2e14a9bb-27e3-40fd-b940-cfb797a1224c?format=jpeg",
-  "https://cdn.cosmos.so/81841d9f-e164-4770-aebc-cfc97d72f3ab?format=jpeg",
-  "https://cdn.cosmos.so/49b81db0-37ea-4569-b0d6-04afa5115a10?format=jpeg",
-  "https://cdn.cosmos.so/ade1834b-9317-44fb-8dc3-b43d29acd409?format=jpeg",
-  "https://cdn.cosmos.so/621c250c-3833-45f9-862a-3f400aaf8f28?format=jpeg",
-  "https://cdn.cosmos.so/f9b7eae8-e5a6-4ce6-b6e1-9ef125ba7f8e?format=jpeg",
-  "https://cdn.cosmos.so/bd56ed6d-1bbd-44a4-b1a1-79b7199bbebb?format=jpeg",
-];
+const InteractiveEyes = () => {
+  const Eye = () => {
+    const eyeRef = useRef<HTMLDivElement>(null);
+    const pupilX = useSpring(0, { stiffness: 170, damping: 24, mass: 0.55 });
+    const pupilY = useSpring(0, { stiffness: 170, damping: 24, mass: 0.55 });
 
-const MarqueeItem = ({ src, index }: { src: string; index: number }) => (
-  <div className="mb-4 hover:scale-105 cursor-pointer duration-300 ease-in-out rounded-xl overflow-hidden shadow-lg border border-white/10">
-    <img
-      src={src}
-      alt={`Image ${index}`}
-      draggable={false}
-      className="w-full h-auto object-cover"
-    />
-  </div>
-);
+    useEffect(() => {
+      const handlePointerMove = (e: PointerEvent) => {
+        if (!eyeRef.current) {
+          return;
+        }
+
+        const rect = eyeRef.current.getBoundingClientRect();
+        const eyeCenterX = rect.left + rect.width / 2;
+        const eyeCenterY = rect.top + rect.height / 2;
+
+        const dx = e.clientX - eyeCenterX;
+        const dy = e.clientY - eyeCenterY;
+        const angle = Math.atan2(dy, dx);
+        const distance = Math.min(Math.hypot(dx, dy), Math.min(rect.width, rect.height) * 0.2);
+
+        pupilX.set(Math.cos(angle) * distance);
+        pupilY.set(Math.sin(angle) * distance);
+      };
+
+      window.addEventListener("pointermove", handlePointerMove, { passive: true });
+      return () => window.removeEventListener("pointermove", handlePointerMove);
+    }, [pupilX, pupilY]);
+
+    return (
+      <div
+        ref={eyeRef}
+        style={{
+          width: "clamp(110px, 12vw, 170px)",
+          height: "clamp(150px, 17vw, 230px)",
+          background: "white",
+          borderRadius: "999px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 12px 30px rgba(0,0,0,0.1)",
+          position: "relative",
+          border: "3px solid #1F1F1F",
+          overflow: "hidden",
+        }}
+      >
+        <motion.div
+          style={{
+            width: "68%",
+            height: "56%",
+            background: "#1F1F1F",
+            borderRadius: "50%",
+            x: pupilX,
+            y: pupilY,
+            position: "relative",
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "center",
+            paddingBottom: "16%",
+          }}
+        >
+          <div style={{
+            width: "24%",
+            height: "24%",
+            background: "white",
+            borderRadius: "50%",
+            opacity: 1,
+          }} />
+        </motion.div>
+      </div>
+    );
+  };
+
+  return (
+    <div style={{
+      display: "flex",
+      gap: "18px",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "100%",
+      height: "100%",
+    }}>
+      <Eye />
+      <Eye />
+    </div>
+  );
+};
 
 export default function ContactPage() {
   const [isSending, setIsSending] = useState(false);
@@ -66,36 +124,143 @@ export default function ContactPage() {
     }
   };
 
-  const firstThird = exampleImages.slice(0, 5);
-  const secondThird = exampleImages.slice(5, 10);
-  const lastThird = exampleImages.slice(10, 15);
-
   return (
     <motion.div
+      className="contact-page"
       key="contact-page"
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -40, filter: "blur(10px)", transition: { duration: 0.4 } }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      exit={{ opacity: 0, y: -24, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }}
+      transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
       style={{
+        position: "relative",
         flex: 1,
+        width: "100%",
+        height: "100%",
         display: "flex",
         flexDirection: "column",
-        padding: "clamp(4rem, 10vw, 6rem) clamp(1.5rem, 8vw, 6rem) 4rem",
-        maxWidth: "1400px",
-        margin: "0 auto",
-        width: "100%",
+        paddingTop: "clamp(88px, 10vw, 130px)",
+        paddingLeft: "clamp(1rem, 6vw, 10%)",
+        paddingRight: "clamp(1rem, 6vw, 10%)",
+        paddingBottom: "1.25rem",
         overflowY: "auto",
         scrollbarWidth: "none",
       }}
     >
-      <div style={{ marginBottom: "40px" }}>
+      <style>{`
+        input:focus, textarea:focus {
+          background: #E6CDCD !important;
+          color: #1F1F1F !important;
+          border-color: #1F1F1F !important;
+          box-shadow: 0 0 20px rgba(230, 205, 205, 0.4);
+        }
+        input:focus::placeholder, textarea:focus::placeholder {
+          color: rgba(31, 31, 31, 0.4);
+        }
+
+        .contact-layout {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: clamp(1.25rem, 2.4vw, 2.5rem);
+          align-items: center;
+          width: 100%;
+          min-height: min(520px, calc(100vh - 150px));
+        }
+
+        .contact-eyes-col {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          align-items: stretch;
+          justify-content: center;
+          width: 100%;
+        }
+
+        .contact-bubble {
+          position: relative;
+          align-self: flex-end;
+          width: min(100%, 470px);
+          height: clamp(128px, 14vw, 150px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .contact-bubble-text {
+          margin: 0;
+          width: 100%;
+          box-sizing: border-box;
+          padding: 0 72px 24px 88px;
+          font-size: clamp(0.9rem, 0.95vw, 1rem);
+          font-weight: 600;
+          letter-spacing: 0;
+          text-align: center;
+          line-height: 1.35;
+          color: #111111;
+          z-index: 1;
+          overflow-wrap: anywhere;
+          font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        @media (max-width: 1024px) {
+          .contact-page {
+            padding: 6rem 1.25rem 2.25rem;
+          }
+
+          .contact-layout {
+            grid-template-columns: 1fr;
+            align-items: start;
+            gap: 2rem;
+            min-height: auto;
+          }
+
+          .contact-eyes-col {
+            align-items: center;
+          }
+
+          .contact-bubble {
+            align-self: center;
+            width: min(100%, 560px);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .contact-page {
+            padding: 12.5rem 1rem 2rem;
+          }
+
+          .contact-layout {
+            gap: 1.25rem;
+          }
+
+          .contact-header {
+            margin-left: 0;
+            margin-top: 1.5rem;
+          }
+
+          .contact-eyes-col {
+            display: none !important;
+          }
+        }
+
+        @media (max-width: 560px) {
+          .contact-page {
+            padding-top: 13.25rem;
+          }
+
+          .contact-header {
+            margin-left: 0;
+            margin-top: 2rem;
+          }
+        }
+      `}</style>
+      <div className="contact-header" style={{ marginBottom: "32px" }}>
         <motion.h2
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           style={{
-            fontSize: "clamp(2.5rem, 5vw, 4rem)",
+            fontSize: "clamp(2rem, 4vw, 3rem)",
             fontWeight: 700,
             margin: 0,
             letterSpacing: "-0.02em",
@@ -110,26 +275,24 @@ export default function ContactPage() {
             transition={{ duration: 0.8, delay: 0.6, ease: "circOut" }}
             style={{
               position: "absolute",
-              bottom: "8px",
+              bottom: "2px",
               left: 0,
               right: "-80%",
-              height: "4px",
+              height: "2px",
               background: "var(--text)",
               transformOrigin: "left",
             }}
           />
         </motion.h2>
+
       </div>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(300px, 1.2fr) minmax(300px, 1fr)",
-        gap: "clamp(2rem, 5vw, 8rem)",
-        alignItems: "stretch",
-        height: "clamp(400px, 60vh, 700px)",
-      }}>
+      <div className="contact-layout">
         {/* Form Column */}
-        <div style={{ position: "relative" }}>
+        <div style={{ 
+          position: "relative",
+          width: "100%",
+        }}>
           <AnimatePresence mode="wait">
             {!isSent ? (
               <motion.form
@@ -140,9 +303,9 @@ export default function ContactPage() {
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: "16px",
+                  gap: "12px",
                   width: "100%",
-                  paddingBottom: "20px",
+                  paddingBottom: "6px",
                 }}
                 onSubmit={handleSubmit}
               >
@@ -151,8 +314,8 @@ export default function ContactPage() {
                   { label: "Company (optional)", placeholder: "...", type: "text", required: false, name: "company" },
                   { label: "Email", placeholder: "...", type: "email", required: true, name: "email" },
                 ].map((field) => (
-                  <div key={field.label} style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <span style={{ fontSize: "0.85rem", fontWeight: 700, opacity: 0.5, marginLeft: "12px" }}>{field.label}</span>
+                  <div key={field.label} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <span style={{ fontSize: "0.9rem", fontWeight: 700, opacity: 0.5, marginLeft: "12px" }}>{field.label}</span>
                     <input
                       type={field.type}
                       name={field.name}
@@ -160,21 +323,22 @@ export default function ContactPage() {
                       placeholder={field.placeholder}
                       style={{
                         width: "100%",
-                        padding: "16px 20px",
-                        background: "rgba(0,0,0,0.05)",
-                        border: "none",
-                        borderRadius: "20px 20px 20px 4px",
-                        fontSize: "0.95rem",
+                        padding: "14px 20px",
+                        background: "rgba(0,0,0,0.04)",
+                        border: "1px solid rgba(0,0,0,0.05)",
+                        borderRadius: "24px 24px 24px 6px",
+                        fontSize: "1rem",
                         fontWeight: 500,
                         color: "var(--text)",
                         outline: "none",
+                        transition: "all 0.3s ease",
                       }}
                     />
                   </div>
                 ))}
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <span style={{ fontSize: "0.85rem", fontWeight: 700, opacity: 0.5, marginLeft: "12px" }}>Message</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <span style={{ fontSize: "0.9rem", fontWeight: 700, opacity: 0.5, marginLeft: "12px" }}>Message</span>
                   <textarea
                     name="message"
                     placeholder="..."
@@ -182,43 +346,45 @@ export default function ContactPage() {
                     rows={4}
                     style={{
                       width: "100%",
-                      padding: "16px 20px",
-                      background: "rgba(0,0,0,0.05)",
-                      border: "none",
-                      borderRadius: "20px 20px 20px 4px",
-                      fontSize: "0.95rem",
+                      padding: "14px 20px",
+                      background: "rgba(0,0,0,0.04)",
+                      border: "1px solid rgba(0,0,0,0.05)",
+                      borderRadius: "24px 24px 24px 6px",
+                      fontSize: "1rem",
                       fontWeight: 500,
                       color: "var(--text)",
                       outline: "none",
                       resize: "none",
+                      transition: "all 0.3s ease",
                     }}
                   />
                 </div>
 
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, backgroundColor: "#000" }}
                   whileTap={{ scale: 0.98 }}
                   disabled={isSending}
                   style={{
                     marginTop: "8px",
-                    padding: "16px 36px",
+                    padding: "16px 38px",
                     background: "var(--text)",
                     color: "var(--bg)",
                     border: "none",
                     borderRadius: "99px",
-                    fontSize: "1rem",
-                    fontWeight: 600,
+                    fontSize: "1.1rem",
+                    fontWeight: 700,
                     cursor: isSending ? "default" : "pointer",
                     alignSelf: "flex-start",
                     opacity: isSending ? 0.7 : 1,
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
                   }}
                 >
                   {isSending ? "Sending..." : "Send Message"}
                 </motion.button>
                 
-                <div style={{ marginTop: "24px" }}>
-                  <span style={{ fontSize: "0.9rem", fontWeight: 500, opacity: 0.4 }}>or </span>
-                  <a href="mailto:luewire@gmail.com" style={{ fontSize: "1.1rem", fontWeight: 700, color: "#6B5B9E", textDecoration: "none" }}>email me</a>
+                <div style={{ marginTop: "14px" }}>
+                  <span style={{ fontSize: "1rem", fontWeight: 500, opacity: 0.4 }}>or </span>
+                  <a href="mailto:luewire@gmail.com" style={{ fontSize: "1.1rem", fontWeight: 700, color: "#6B5B9E", textDecoration: "none", borderBottom: "2px solid rgba(107, 91, 158, 0.2)" }}>email me directly</a>
                 </div>
               </motion.form>
             ) : (
@@ -228,21 +394,21 @@ export default function ContactPage() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 style={{
-                  height: "100%",
+                  width: "100%",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
-                  gap: "16px",
-                  padding: "40px",
-                  background: "rgba(107, 91, 158, 0.05)",
-                  borderRadius: "32px",
-                  border: "2px dashed rgba(107, 91, 158, 0.2)",
+                  gap: "24px",
+                  padding: "60px 40px",
+                  background: "rgba(107, 91, 158, 0.03)",
+                  borderRadius: "40px",
+                  border: "2px dashed rgba(107, 91, 158, 0.15)",
                   textAlign: "center",
                 }}
               >
-                <div style={{ fontSize: "4rem" }}>✉️</div>
-                <h3 style={{ fontSize: "2rem", fontWeight: 700, margin: 0 }}>Message Sent!</h3>
-                <p style={{ fontSize: "1.1rem", fontWeight: 500, opacity: 0.6, margin: 0 }}>
+                <div style={{ fontSize: "5rem" }}>✉️</div>
+                <h3 style={{ fontSize: "2.5rem", fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>Message Sent!</h3>
+                <p style={{ fontSize: "1.2rem", fontWeight: 500, opacity: 0.6, margin: 0, lineHeight: 1.5 }}>
                   Thank you for reaching out. I'll get back to you as soon as possible.
                 </p>
                 <button 
@@ -252,7 +418,8 @@ export default function ContactPage() {
                     background: "none",
                     border: "none",
                     color: "#6B5B9E",
-                    fontWeight: 700,
+                    fontWeight: 800,
+                    fontSize: "1.1rem",
                     textDecoration: "underline",
                     cursor: "pointer",
                   }}
@@ -264,32 +431,45 @@ export default function ContactPage() {
           </AnimatePresence>
         </div>
 
-        {/* Right Column: Triple Vertical Marquee */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          style={{
-            position: "relative",
-            height: "100%",
-            display: "flex",
-            gap: "12px",
-            overflow: "hidden",
-            maskImage: 'linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)',
-          }}
-        >
-          <ShadcnMarquee vertical className="[--duration:25s]" pauseOnHover>
-            {firstThird.map((src, i) => <MarqueeItem key={i} src={src} index={i} />)}
-          </ShadcnMarquee>
-          
-          <ShadcnMarquee vertical reverse className="[--duration:30s]" pauseOnHover>
-            {secondThird.map((src, i) => <MarqueeItem key={i} src={src} index={i + 5} />)}
-          </ShadcnMarquee>
-          
-          <ShadcnMarquee vertical className="[--duration:28s]" pauseOnHover>
-            {lastThird.map((src, i) => <MarqueeItem key={i} src={src} index={i + 10} />)}
-          </ShadcnMarquee>
+        {/* Right Column: Interactive Eyes */}
+        <motion.div className="contact-eyes-col">
+          <motion.div
+            className="contact-bubble"
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
+          >
+            <svg
+              viewBox="0 0 560 190"
+              width="100%"
+              height="100%"
+              aria-hidden="true"
+              style={{ position: "absolute", inset: 0 }}
+            >
+              <motion.path
+                d="M72 24 H496 Q534 24 534 64 V112 Q534 150 496 150 H170 Q156 168 118 176 Q138 156 138 142 Q90 138 72 126 Q52 112 52 84 V64 Q52 24 72 24 Z"
+                fill="#FFFFFF"
+                stroke="#101010"
+                strokeWidth="3"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.14 }}
+              />
+            </svg>
+            <motion.p
+              className="contact-bubble-text"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+            >
+              Hello there! It's a pleasure to connect with you.
+            </motion.p>
+          </motion.div>
+          <div className="contact-eyes-wrap" style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+            <InteractiveEyes />
+          </div>
         </motion.div>
       </div>
     </motion.div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface AboutPageProps {
   onBack: () => void;
@@ -12,16 +13,19 @@ export default function AboutPage({ onBack }: AboutPageProps) {
       key="about-page"
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -40, filter: "blur(10px)", transition: { duration: 0.4 } }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      exit={{ opacity: 0, y: -26, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }}
+      transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
       style={{
+        position: "relative",
         flex: 1,
+        width: "100%",
+        height: "100%",
         display: "flex",
         flexDirection: "column",
-        padding: "clamp(6rem, 15vw, 10rem) clamp(1.5rem, 8vw, 6rem) 4rem",
-        maxWidth: "1400px",
-        margin: "0 auto",
-        width: "100%",
+        paddingTop: "clamp(140px, 16vw, 220px)",
+        paddingLeft: "clamp(1rem, 6vw, 10%)",
+        paddingRight: "clamp(1rem, 6vw, 10%)",
+        paddingBottom: "clamp(3rem, 6vw, 5rem)",
         overflowY: "auto",
         scrollbarWidth: "none",
       }}
@@ -31,19 +35,19 @@ export default function AboutPage({ onBack }: AboutPageProps) {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: "clamp(3rem, 6vw, 6rem)",
+          gap: "clamp(2rem, 4vw, 4rem)",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start",
         }}
       >
         {/* Portrait Image */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.05, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
           style={{
             position: "relative",
-            width: "clamp(280px, 35vw, 450px)",
+            width: "clamp(240px, 26vw, 360px)",
             aspectRatio: "1/1",
             background: "#D1D1D1",
             borderRadius: "40% 10% 40% 10%", 
@@ -52,12 +56,13 @@ export default function AboutPage({ onBack }: AboutPageProps) {
             flexShrink: 0,
           }}
         >
-          <img 
-            src="/images/IMG-20240915-WA0228_Original.jpg" 
+          <Image 
+            src="/images/photo-main.webp" 
             alt="Ridho Zen"
+            fill
+            sizes="(max-width: 768px) 100vw, 450px"
+            priority
             style={{
-              width: "100%",
-              height: "100%",
               objectFit: "cover",
             }}
           />
@@ -67,17 +72,17 @@ export default function AboutPage({ onBack }: AboutPageProps) {
         <div style={{ 
           display: "flex", 
           flexDirection: "column", 
-          gap: "clamp(1.5rem, 4vw, 2.5rem)",
-          flex: "1 1 400px",
-          minWidth: "min(100%, 400px)",
+          gap: "clamp(1.25rem, 2.5vw, 2rem)",
+          flex: "1 1 360px",
+          minWidth: "min(100%, 340px)",
         }}>
           <div>
             <motion.h2
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               style={{
-                fontSize: "clamp(3.5rem, 8vw, 5.5rem)",
+                fontSize: "clamp(2rem, 4vw, 3rem)",
                 fontWeight: 700,
                 margin: 0,
                 letterSpacing: "-0.03em",
@@ -90,13 +95,13 @@ export default function AboutPage({ onBack }: AboutPageProps) {
               <motion.div
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.8, ease: "circOut" }}
+                transition={{ duration: 1, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   position: "absolute",
-                  bottom: "4px",
+                  bottom: "2px",
                   left: 0,
                   right: "-20%",
-                  height: "clamp(4px, 1vw, 6px)",
+                  height: "2px",
                   background: "var(--text)",
                   transformOrigin: "left",
                 }}
@@ -107,7 +112,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+            transition={{ duration: 0.85, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -116,7 +121,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
             }}
           >
             <p style={{
-              fontSize: "clamp(1.3rem, 2vw, 1.6rem)",
+              fontSize: "clamp(1rem, 1.25vw, 1.15rem)",
               lineHeight: 1.5,
               margin: 0,
               fontWeight: 500,
@@ -125,7 +130,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
               I'm <span style={{ fontWeight: 700 }}>Ridho Zen</span>, a frontend developer passionate about building interactive and highly functional digital experiences. I focus my work on crafting seamless web applications, constantly exploring modern frameworks like Next.js and React to bring complex ideas to the browser.
             </p>
             <p style={{
-              fontSize: "clamp(1.2rem, 1.8vw, 1.4rem)",
+              fontSize: "clamp(0.95rem, 1.1vw, 1.05rem)",
               lineHeight: 1.6,
               margin: 0,
               fontWeight: 500,
@@ -133,29 +138,6 @@ export default function AboutPage({ onBack }: AboutPageProps) {
             }}>
               Outside of my main projects, I love keeping my brain engaged with hands-on technical challenges. Whether it's developing pixel-art games, tinkering with Linux systems and hardware, or building digital reading platforms, I'm always looking for ways to stay creative and push my technical boundaries.
             </p>
-
-            <motion.a
-              href="#"
-              whileHover={{ x: 10 }}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "14px",
-                fontSize: "1.4rem",
-                fontWeight: 700,
-                color: "#6B5B9E",
-                textDecoration: "none",
-                marginTop: "1.5rem",
-                borderBottom: "2px solid rgba(107, 91, 158, 0.3)",
-                alignSelf: "flex-start",
-                paddingBottom: "4px",
-              }}
-            >
-              see my resume
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14m-7-7 7 7-7 7"/>
-              </svg>
-            </motion.a>
           </motion.div>
         </div>
       </div>

@@ -12,7 +12,7 @@ import MenuOverlay from "../components/MenuOverlay";
 export default function Home() {
   const [currentPage, setCurrentPage] = useState<"home" | "work" | "about" | "contact">("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isIntroDone, setIsIntroDone] = useState(false);
+  const [isIntroDone] = useState(true);
 
   const handleNavigate = (page: "home" | "work" | "about" | "contact") => {
     setCurrentPage(page);
@@ -47,7 +47,7 @@ export default function Home() {
               background: "#F1F1F1",
             }}
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.7 } }}
+            exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } }}
           >
             <motion.h1
               style={{
@@ -62,7 +62,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-              onAnimationComplete={() => setTimeout(() => setIsIntroDone(true), 800)}
+              onAnimationComplete={() => {}}
             >
               LUEWIRE
             </motion.h1>
@@ -94,10 +94,10 @@ export default function Home() {
             <motion.div
               animate={{ 
                 scale: isMenuOpen ? 0.95 : 1,
-                filter: isMenuOpen ? "blur(10px)" : "blur(0px)",
+                filter: isMenuOpen ? "blur(6px)" : "blur(0px)",
                 opacity: isMenuOpen ? 0.4 : 1,
               }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 flex: 1,
                 minHeight: 0, /* FIX SCROLLING */
@@ -120,8 +120,8 @@ export default function Home() {
                     }}
                     initial={{ opacity: 0, y: -40, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -60, scale: 0.95, filter: "blur(5px)", transition: { duration: 0.4, ease: [0.4, 0, 1, 1] } }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    exit={{ opacity: 0, y: -28, scale: 0.985, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
+                    transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
                   >
                     {/* Hero title */}
                     <motion.h2
