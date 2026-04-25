@@ -46,17 +46,25 @@
 html {
   background-color: var(--bg);
   transition: background-color var(--transition-theme);
-  scroll-behavior: smooth;
   height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
 }
 
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
   color: var(--text);
   background-color: transparent;
-  min-height: 100vh;
+  height: 100%;
+  height: 100dvh;
   margin: 0;
-  overflow-x: hidden;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+  position: fixed;
+  width: 100%;
 }
 
 ::selection {
@@ -125,4 +133,50 @@ h6 {
 
 .link-effect:hover {
   color: #E6CDCD;
+}
+/* Prevent iOS auto-zoom on input focus (requires font-size >= 16px) */
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* WorkPage Mobile Styles */
+@media (max-width: 768px) {
+  .detail-container {
+    padding-left: 6vw !important;
+    padding-right: 6vw !important;
+    padding-top: 130px !important;
+  }
+  .info-grid {
+    flex-direction: column !important;
+    gap: 32px !important;
+  }
+  .info-grid .meta-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+  .meta-box {
+    min-width: 100% !important;
+  }
+  .project-title {
+    font-size: 2.2rem !important;
+  }
+  .back-btn-container {
+    top: auto !important;
+    bottom: -12px !important; /* Compensates for Framer Motion's translateY(-50%) */
+    left: 16px !important;
+    position: fixed !important;
+    z-index: 100 !important;
+  }
+  .back-btn-circle {
+    transform: scale(0.75) !important;
+    transform-origin: center left !important;
+  }
+  .back-btn-text {
+    display: none !important;
+  }
 }

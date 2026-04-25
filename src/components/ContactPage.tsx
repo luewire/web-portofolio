@@ -154,6 +154,7 @@ export default function ContactPage() {
         paddingRight: "clamp(1rem, 6vw, 10%)",
         paddingBottom: "1.25rem",
         overflowY: "auto",
+        overscrollBehavior: "contain",
         scrollbarWidth: "none",
       }}
     >
@@ -236,31 +237,48 @@ export default function ContactPage() {
 
         @media (max-width: 768px) {
           .contact-page {
-            padding: 12.5rem 1rem 2rem;
-          }
-
-          .contact-layout {
-            gap: 1.25rem;
+            padding: 0 1rem 0.75rem !important;
+            padding-top: 115px !important;
+            height: 100dvh !important;
+            overflow: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
           }
 
           .contact-header {
-            margin-left: 0;
-            margin-top: 1.5rem;
+            margin-bottom: 12px !important;
+            flex-shrink: 0;
+          }
+
+          .contact-layout {
+            grid-template-columns: 1fr !important;
+            gap: 0 !important;
+            min-height: 0 !important;
+            flex: 1;
           }
 
           .contact-eyes-col {
             display: none !important;
           }
-        }
 
-        @media (max-width: 560px) {
-          .contact-page {
-            padding-top: 13.25rem;
+          .contact-form-fields {
+            gap: 8px !important;
           }
 
-          .contact-header {
-            margin-left: 0;
-            margin-top: 2rem;
+          .contact-form-fields input {
+            padding: 10px 16px !important;
+            font-size: 0.9rem !important;
+          }
+
+          .contact-form-fields textarea {
+            padding: 10px 16px !important;
+            font-size: 0.9rem !important;
+          }
+
+          .contact-field-label {
+            font-size: 0.75rem !important;
+            margin-bottom: 2px !important;
           }
         }
       `}</style>
@@ -310,6 +328,7 @@ export default function ContactPage() {
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}
                 transition={{ duration: 0.4 }}
+                className="contact-form-fields"
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -324,8 +343,8 @@ export default function ContactPage() {
                   { label: "Company (optional)", placeholder: "...", type: "text", required: false, name: "company" },
                   { label: "Email", placeholder: "...", type: "email", required: true, name: "email" },
                 ].map((field) => (
-                  <div key={field.label} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                    <span style={{ fontSize: "0.9rem", fontWeight: 700, opacity: 0.5, marginLeft: "12px" }}>{field.label}</span>
+                  <div key={field.label} style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                    <span className="contact-field-label" style={{ fontSize: "0.9rem", fontWeight: 700, opacity: 0.5, marginLeft: "12px" }}>{field.label}</span>
                     <input
                       type={field.type}
                       name={field.name}
@@ -347,13 +366,13 @@ export default function ContactPage() {
                   </div>
                 ))}
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                  <span style={{ fontSize: "0.9rem", fontWeight: 700, opacity: 0.5, marginLeft: "12px" }}>Message</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <span className="contact-field-label" style={{ fontSize: "0.9rem", fontWeight: 700, opacity: 0.5, marginLeft: "12px" }}>Message</span>
                   <textarea
                     name="message"
                     placeholder="..."
                     required
-                    rows={4}
+                    rows={3}
                     style={{
                       width: "100%",
                       padding: "14px 20px",

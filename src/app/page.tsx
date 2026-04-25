@@ -23,11 +23,13 @@ export default function Home() {
     <main
       style={{
         position: "relative",
-        height: "100vh",
+        height: "100dvh",
         width: "100%",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
+        overscrollBehavior: "none",
+        touchAction: "none",
         background: "#F1F1F1",
         color: "#1F1F1F",
       }}
@@ -127,7 +129,7 @@ export default function Home() {
                     <motion.h2
                       style={{
                         fontFamily: "var(--font-graffiti)",
-                        fontSize: "clamp(6rem, 13vw, 10rem)",
+                        fontSize: "clamp(3.5rem, 18vw, 10rem)",
                         color: "#E6CDCD",
                         textShadow: "-1px -1px 0 #1F1F1F, 1px -1px 0 #1F1F1F, -1px 1px 0 #1F1F1F, 1px 1px 0 #1F1F1F",
                         lineHeight: 1,
@@ -148,7 +150,7 @@ export default function Home() {
                         display: "flex",
                         justifyContent: "center",
                         width: "100%",
-                        gap: "clamp(80px, 15vw, 200px)",
+                        gap: "clamp(40px, 10vw, 200px)",
                         marginTop: "24px",
                       }}
                       initial={{ opacity: 0, y: 16 }}
@@ -205,7 +207,7 @@ export default function Home() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0, y: 40, transition: { duration: 0.4 } }}
-                  style={{ position: "absolute", bottom: "3.5vh", left: 0, right: 0, zIndex: 20 }}
+                  style={{ position: "absolute", bottom: "max(3dvh, 20px)", left: 0, right: 0, zIndex: 20 }}
                 >
                   <Marquee />
                 </motion.div>
