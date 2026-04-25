@@ -112,6 +112,7 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
               paddingLeft: "10%",
               paddingRight: "10%",
               overflowY: "auto",
+              overscrollBehavior: "contain",
             }}
           >
 
@@ -140,7 +141,18 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
                   Selected Works
                 </h1>
               </div>
-              <div style={{ height: "2px", background: "var(--text)", width: "100%", maxWidth: "800px" }} />
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  height: "2px",
+                  background: "var(--text)",
+                  width: "100%",
+                  maxWidth: "800px",
+                  transformOrigin: "left",
+                }}
+              />
             </motion.div>
 
             {/* Project rows */}
@@ -162,10 +174,10 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
                       alignItems: "center",
                       justifyContent: "space-between",
                       padding: "18px 0",
-                      borderBottom: "1px solid var(--text)",
                       cursor: "pointer",
                       transition: "opacity 0.3s",
                       opacity: hovered && !isHov ? 0.3 : 1,
+                      position: "relative",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
@@ -210,6 +222,20 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
                     >
                       {project.category}
                     </motion.span>
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: 0.8, delay: 0.2 + index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                      style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "1px",
+                        background: "var(--text)",
+                        transformOrigin: "left",
+                      }}
+                    />
                   </motion.div>
                 );
               })}
@@ -231,13 +257,101 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
               position: "relative",
             }}
           >
+            {/* Sticky Back Button */}
+            <motion.div
+              className="back-btn-container"
+              style={{
+                position: "fixed",
+                left: "40px",
+                top: "50%",
+                zIndex: 100,
+                display: "flex",
+                alignItems: "center",
+              }}
+              initial={{ opacity: 0, scale: 0.6, x: -30, y: "-50%" }}
+              animate={{ opacity: 1, scale: 1, x: 0, y: "-50%" }}
+              exit={{ opacity: 0, scale: 0.6, x: -30, y: "-50%" }}
+              transition={{ 
+                duration: 0.8, 
+                type: "spring", 
+                bounce: 0.35,
+                opacity: { duration: 0.4 } 
+              }}
+            >
+              <motion.button
+                onClick={() => setSelectedProject(null)}
+                onMouseEnter={() => setHovered("back")}
+                onMouseLeave={() => setHovered(null)}
+                className="back-btn-circle"
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+                whileHover={{ x: 10 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {/* Text that slides out from behind the circle */}
+                <motion.div
+                  className="back-btn-text"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ 
+                    opacity: hovered === "back" ? 1 : 0,
+                    x: hovered === "back" ? 60 : -20
+                  }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    background: "#F8F5EE",
+                    color: "#1A1A1A",
+                    padding: "10px 24px 10px 32px", // Extra left padding for overlap
+                    borderRadius: "24px",
+                    fontWeight: 600,
+                    fontSize: "1.1rem",
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                    zIndex: 40, // Behind the circle
+                  }}
+                >
+                  Back
+                </motion.div>
+
+                {/* The Circle Button */}
+                <div
+                  style={{
+                    width: "72px",
+                    height: "72px",
+                    borderRadius: "36px",
+                    background: "#F8F5EE",
+                    color: "#1A1A1A",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+                    zIndex: 50,
+                    position: "relative",
+                  }}
+                >
+                  {/* Rounded solid triangle pointing left */}
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.288 10.45l7.07-4.242c1.44-.864 3.253.174 3.253 1.855v8.484c0 1.681-1.813 2.719-3.253 1.855l-7.07-4.242c-1.332-.8-1.332-2.91 0-3.71z" fill="currentColor"/>
+                  </svg>
+                </div>
+              </motion.button>
+            </motion.div>
 
             {/* Scrollable Container */}
             <div
+              className="detail-container"
               style={{
                 width: "100%",
                 height: "100%",
                 overflowY: "auto",
+                overscrollBehavior: "contain",
                 paddingTop: "140px",
                 paddingLeft: "max(120px, 10%)",
                 paddingRight: "10%",
@@ -299,6 +413,7 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ y: 800, rotate: 6, opacity: 0, transition: { duration: 0.6, delay: 0.05, ease: [0.6, -0.05, 0.9, 0.5] } }}
                 transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                className="project-title"
                 style={{ 
                   fontSize: "clamp(2.5rem, 4vw, 3.5rem)", 
                   fontWeight: 600, 
@@ -330,6 +445,7 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ y: 800, rotate: -5, opacity: 0, transition: { duration: 0.6, delay: 0.15, ease: [0.6, -0.05, 0.9, 0.5] } }}
                 transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                className="info-grid"
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
@@ -338,14 +454,14 @@ export default function WorkPage({ onBack }: { onBack: () => void }) {
                 }}
               >
                 {/* Meta left */}
-                <div style={{ display: "flex", flexDirection: "column", gap: "24px", minWidth: "280px" }}>
+                <div className="meta-box" style={{ display: "flex", flexDirection: "column", gap: "24px", minWidth: "280px" }}>
                   {[
                     { label: "Link", value: <a href={selectedProject.link} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, color: "var(--text)", textDecoration: "underline", textUnderlineOffset: "4px" }}>{selectedProject.linkLabel}</a> },
                     { label: "Date", value: <span style={{ fontWeight: 600 }}>{selectedProject.year}</span> },
                     { label: "Roles", value: <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>{selectedProject.roles.map(r => <span key={r} style={{ fontWeight: 600 }}>{r}</span>)}</div> },
                     { label: "Tech", value: <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>{selectedProject.tech.map(t => <span key={t} style={{ fontWeight: 600 }}>{t}</span>)}</div> },
                   ].map(({ label, value }) => (
-                    <div key={label} style={{ display: "flex", alignItems: "flex-start", gap: "24px" }}>
+                    <div key={label} className="meta-row" style={{ display: "flex", alignItems: "flex-start", gap: "24px" }}>
                       <span style={{
                         fontSize: "0.9rem",
                         fontWeight: 700,

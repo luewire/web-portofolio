@@ -27,6 +27,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
         paddingRight: "clamp(1rem, 6vw, 10%)",
         paddingBottom: "clamp(3rem, 6vw, 5rem)",
         overflowY: "auto",
+        overscrollBehavior: "contain",
         scrollbarWidth: "none",
       }}
     >
